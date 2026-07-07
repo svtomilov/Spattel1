@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spattel — конкурентный анализ ниши (Пермь)</title>
+<meta name="description" content="Конкурентный анализ рынка капитального ремонта квартир в Перми для Spattel.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --ink: #0a0a0a;
+    --paper: #f6f4f0;
+    --accent: #c45d3e;
+    --accent-light: #e8a48e;
+    --muted: #8a8580;
+    --divider: #d6d2cc;
+    --card: #fffefa;
+    --shadow: rgba(10, 10, 10, 0.06);
+}
+
+body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.container { max-width: 980px; margin: 0 auto; padding: 0 2rem; }
+
+header { padding: 5rem 0 3rem; text-align: center; position: relative; }
+header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 1px; height: 80px;
+    background: linear-gradient(to bottom, transparent, var(--accent));
+}
+.eyebrow { font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 1.5rem; }
+h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2.4rem, 5.5vw, 3.8rem); font-weight: 400; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 1.25rem; }
+h1 em { color: var(--accent); font-style: italic; }
+.subtitle { font-size: 1.02rem; color: var(--muted); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+.meta-row { display: flex; justify-content: center; gap: 1.5rem; margin-top: 1.75rem; flex-wrap: wrap; }
+.meta-pill { font-size: 0.78rem; padding: 0.4rem 1rem; border-radius: 100px; background: var(--card); border: 1px solid var(--divider); color: var(--ink); font-weight: 500; }
+
+.divider { width: 60px; height: 1px; background: var(--accent); margin: 3.5rem auto; }
+
+.section-block { padding-bottom: 3rem; }
+.card {
+    background: var(--card);
+    border: 1px solid var(--divider);
+    border-radius: 16px;
+    padding: 2.3rem 2.3rem 2.3rem 2.3rem;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+.card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: linear-gradient(to bottom, var(--accent), var(--accent-light));
+    border-radius: 4px 0 0 4px;
+}
+.card-header { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.1rem; }
+.card-number { font-family: 'Instrument Serif', serif; font-size: 2.6rem; color: var(--accent); line-height: 1; opacity: 0.3; flex-shrink: 0; }
+.card-title { font-family: 'Instrument Serif', serif; font-size: 1.5rem; font-weight: 400; line-height: 1.2; }
+.card-body { color: #3a3835; font-size: 0.92rem; line-height: 1.75; }
+.card-body p { margin-bottom: 0.75rem; }
+.card-body p:last-child { margin-bottom: 0; }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
+.tag { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.35rem 0.85rem; border-radius: 100px; background: var(--paper); border: 1px solid var(--divider); color: var(--muted); font-weight: 500; }
+
+.note {
+    background: linear-gradient(135deg, #fdf6f3, #fef9f6);
+    border: 1px dashed var(--accent-light);
+    border-radius: 12px;
+    padding: 1.1rem 1.5rem;
+    margin-top: 1.1rem;
+    display: flex; align-items: flex-start; gap: 0.65rem;
+}
+.note-icon { font-size: 1.05rem; flex-shrink: 0; margin-top: 0.1rem; }
+.note p { font-size: 0.8rem; color: var(--accent); font-weight: 500; line-height: 1.6; }
+
+/* competitor grid */
+.competitors { display: flex; flex-direction: column; gap: 1.5rem; }
+.competitor {
+    background: var(--card); border: 1px solid var(--divider); border-radius: 14px;
+    padding: 1.8rem 2rem; display: grid; grid-template-columns: 90px 1fr; gap: 1.5rem;
+}
+.rank-badge {
+    width: 62px; height: 62px; border-radius: 50%;
+    background: var(--paper); border: 1px solid var(--divider);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Instrument Serif', serif; color: var(--accent);
+}
+.rank-badge b { font-size: 1.6rem; line-height: 1; }
+.rank-badge small { font-size: 0.55rem; letter-spacing: 0.06em; color: var(--muted); text-transform: uppercase; }
+.swatch-row { display: flex; gap: 6px; margin: 0.6rem 0 0.9rem; }
+.swatch { width: 20px; height: 20px; border-radius: 5px; border: 1px solid rgba(0,0,0,.08); }
+.comp-name { font-family: 'Instrument Serif', serif; font-size: 1.3rem; margin-bottom: 0.2rem; }
+.comp-url { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.7rem; }
+.comp-stats { display: flex; gap: 1.2rem; flex-wrap: wrap; margin-bottom: 0.8rem; }
+.comp-stats div { font-size: 0.78rem; color: var(--muted); }
+.comp-stats b { color: var(--ink); font-weight: 700; }
+.comp-body p { font-size: 0.88rem; color: #3a3835; margin-bottom: 0.5rem; }
+.comp-body p:last-child { margin-bottom: 0; }
+.strengths-weak { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.9rem; }
+.strengths-weak div { font-size: 0.82rem; }
+.strengths-weak .sw-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.3rem; display: block; }
+@media (max-width: 640px) { .competitor { grid-template-columns: 1fr; } .strengths-weak { grid-template-columns: 1fr; } }
+
+/* scoring table */
+.tbl-scroll { overflow-x: auto; border-radius: 10px; border: 1px solid var(--divider); }
+table.score { width: 100%; border-collapse: collapse; background: var(--card); font-size: 0.82rem; min-width: 640px; }
+table.score th, table.score td { padding: 0.75rem 0.9rem; text-align: left; border-bottom: 1px solid var(--divider); }
+table.score thead th { font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; background: var(--paper); color: var(--muted); font-weight: 500; }
+table.score tr:last-child td { font-weight: 700; }
+table.score td:not(:first-child), table.score th:not(:first-child) { text-align: center; }
+
+/* comparison table */
+table.cmp { width: 100%; border-collapse: collapse; background: var(--card); font-size: 0.85rem; }
+table.cmp th, table.cmp td { padding: 0.85rem 1rem; text-align: left; border-bottom: 1px solid var(--divider); }
+table.cmp thead th { font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; background: var(--paper); color: var(--muted); font-weight: 500; }
+table.cmp thead th.us { background: var(--ink); color: var(--paper); }
+table.cmp td.us { font-weight: 700; color: var(--accent); background: rgba(196,93,62,0.06); }
+table.cmp tr:last-child td { border-bottom: none; }
+
+/* pattern list */
+.pattern-list { list-style: none; counter-reset: pat; }
+.pattern-list li { counter-increment: pat; display: grid; grid-template-columns: 2.2rem 1fr; gap: 0.9rem; padding: 1rem 0; border-top: 1px solid var(--divider); }
+.pattern-list li:first-child { border-top: none; }
+.pattern-list li::before { content: counter(pat, decimal-leading-zero); font-family: 'Instrument Serif', serif; color: var(--accent); font-size: 1.3rem; opacity: 0.55; }
+.pattern-list b { display: block; margin-bottom: 0.2rem; }
+.pattern-list p { font-size: 0.87rem; color: #3a3835; }
+
+/* design direction swatches */
+.palette-row { display: flex; gap: 0.9rem; flex-wrap: wrap; margin: 1rem 0 1.5rem; }
+.palette-chip { text-align: center; font-size: 0.7rem; color: var(--muted); }
+.palette-chip .sq { width: 56px; height: 56px; border-radius: 8px; margin-bottom: 0.4rem; border: 1px solid rgba(0,0,0,.08); }
+
+footer { text-align: center; padding: 3rem 0 4rem; border-top: 1px solid var(--divider); }
+footer p { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.05em; }
+
+.flow-connector { display: flex; justify-content: center; padding: 0.1rem 0 1.5rem; }
+.flow-connector svg { color: var(--divider); }
+
+@media (max-width: 640px) {
+    header { padding: 3.5rem 0 2.5rem; }
+    .card { padding: 1.75rem 1.4rem; }
+    .card-number { font-size: 2rem; }
+    .card-title { font-size: 1.2rem; }
+}
+
+@media print {
+    body::after { display: none; }
+    .card, .competitor { break-inside: avoid; box-shadow: none; }
+    header::before { display: none; }
+    @page { size: A4; margin: 16mm; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <p class="eyebrow">Competitive Analysis</p>
+        <h1>Spattel <em>vs.</em> рынок ремонта<br>Пермь</h1>
+        <p class="subtitle">Разбор пяти ведущих компаний по капитальному ремонту квартир в Перми: что продают, чем убеждают, и где рынок оставил свободное место для позиционирования Spattel.</p>
+        <div class="meta-row">
+            <span class="meta-pill">Клиент: Spattel</span>
+            <span class="meta-pill">Ниша: капитальный ремонт вторички</span>
+            <span class="meta-pill">Регион: Пермь</span>
+        </div>
+    </header>
+
+    <div class="divider"></div>
+
+    <div class="section-block">
+
+        <!-- Executive summary -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-number">01</span>
+                <h2 class="card-title">Executive Summary</h2>
+            </div>
+            <div class="card-body">
+                <p>Рынок капитального ремонта квартир в Перми состоит из пяти заметных игроков (по рейтингу
+                топ-недвижимости.рф), и все пять конкурируют почти одинаковыми аргументами: гарантия
+                2–4 года, оплата без большого аванса, бесплатный замер, три уровня цены за м². Ни один
+                не строит бренд вокруг персональной ответственности одного человека и не проговаривает
+                напрямую страхи клиента («бросят», «обманут», «смета поедет») — это делает Spattel
+                структурно.</p>
+                <p>Визуально все пять сайтов — типовые «стройфирменные» шаблоны: светлый фон, бирюзовые
+                или оранжевые акценты, стоковые фото ремонта. Тёплая архитектурная палитра графит/песок/латте,
+                уже выбранная для Spattel, не встречается ни у одного конкурента — это подтверждённое
+                данными визуальное отличие, а не гипотеза.</p>
+                <p>Главный разрыв, который нужно закрыть до запуска: у прототипа Spattel в блоке продуктов
+                стоят цифровые заглушки цены за м², тогда как три из пяти конкурентов показывают конкретные
+                цифры уже на первом экране. Рынок приучил клиента ожидать реальную цену сразу.</p>
+            </div>
+        </div>
+
+        <div class="note">
+            <span class="note-icon">&#8505;&#65039;</span>
+            <p>Метод: сайты конкурентов получены через WebFetch (Firecrawl MCP не был подключён на момент
+            анализа), поэтому цвета брендов ниже — приблизительные, по текстовому описанию страниц, а не
+            извлечены напрямую из CSS. Для точных hex-кодов и Lighthouse-метрик рекомендуется повторный
+            прогон через Firecrawl после подключения MCP.</p>
+        </div>
+
+        <div class="flow-connector">
+            <svg width="2" height="24" viewBox="0 0 2 24" fill="none"><line x1="1" y1="0" x2="1" y2="24" stroke="currentColor" stroke-dasharray="3 3"/></svg>
+        </div>
+
+        <!-- Competitor profiles -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-number">02</span>
+                <h2 class="card-title">Профили пяти конкурентов</h2>
+            </div>
+            <div class="card-body">
+                <p>Источник рейтинга: топ-недвижимости.рф. Ниже — реальные официальные сайты компаний,
+                найденные через карточки рейтинга.</p>
+            </div>
+        </div>
+
+        <div class="competitors">
+            <div class="competitor">
+                <div>
+                    <div class="rank-badge"><b>#1</b><small>рейтинг</small></div>
+                    <div class="swatch-row">
+                        <div class="swatch" style="background:#2fb6c4" title="бирюзовый акцент"></div>
+                        <div class="swatch" style="background:#f4f6f5" title="светлый фон"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="comp-name">Новый Ремонт</div>
+                    <div class="comp-url">novyremont.ru · Пермь, Комсомольский пр. 54</div>
+                    <div class="comp-stats">
+                        <div>Яндекс <b>4.8</b></div><div>Google <b>5.0</b></div><div>Отзывов <b>37</b></div><div>Общий балл <b>178.6</b></div>
+                    </div>
+                    <div class="comp-body">
+                        <p>УТП «Новое качество жизни»: онлайн-трансляция объекта, мобильное приложение
+                        контроля, 2 года гарантии, работа без предоплаты (расчёт раз в 2 недели по факту).
+                        Самый насыщенный сайт по цифровой прозрачности процесса в нише.</p>
+                    </div>
+                    <div class="strengths-weak">
+                        <div><span class="sw-label">Сильные стороны</span>Веб-камера на объекте, приложение мониторинга, портфолио 20+, видеоотзыв</div>
+                        <div><span class="sw-label">Слабые стороны</span>Раздел новостей не обновлялся с 2021 — подрывает ощущение «живой» компании</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="competitor">
+                <div>
+                    <div class="rank-badge"><b>#2</b><small>рейтинг</small></div>
+                    <div class="swatch-row">
+                        <div class="swatch" style="background:#1a1a1a" title="чёрный текст"></div>
+                        <div class="swatch" style="background:#ffffff;border-color:#ccc" title="белый фон"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="comp-name">СпецРемонт</div>
+                    <div class="comp-url">specremontperm.ru · Пермь, ул. Холмогорская 4Г</div>
+                    <div class="comp-stats">
+                        <div>Яндекс <b>4.8</b></div><div>Отзывов <b>26</b></div><div>Общий балл <b>124.8</b></div>
+                    </div>
+                    <div class="comp-body">
+                        <p>Единственный, кто явно называет состав штата (22 отделочника, 2 электрика,
+                        2 сантехника) и опыт руководителя с 2003 года. Три уровня цены за м² сразу на
+                        первом экране. Самая длинная гарантия в выборке — 4 года.</p>
+                    </div>
+                    <div class="strengths-weak">
+                        <div><span class="sw-label">Сильные стороны</span>Гарантия 4 года, конкретный состав команды, быстрая форма расчёта (5 минут)</div>
+                        <div><span class="sw-label">Слабые стороны</span>Нет визуального брендинга, нет именных отзывов, обезличенный дизайн</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="competitor">
+                <div>
+                    <div class="rank-badge"><b>#3</b><small>рейтинг</small></div>
+                    <div class="swatch-row">
+                        <div class="swatch" style="background:#e08a3c" title="оранжевый акцент"></div>
+                        <div class="swatch" style="background:#faf6ef" title="светлый фон"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="comp-name">Bravo</div>
+                    <div class="comp-url">bravo-remont.ru · Пермь, ул. Белинского 45</div>
+                    <div class="comp-stats">
+                        <div>Яндекс <b>4.1</b></div><div>Google <b>5.0</b></div><div>Отзывов <b>26</b></div><div>Общий балл <b>110.2</b></div>
+                    </div>
+                    <div class="comp-body">
+                        <p>Самый насыщенный контентом сайт: подробный прайс-лист по видам работ, 375
+                        выполненных объектов (крупнейшая цифра в нише), 3 именных текстовых отзыва —
+                        единственные в выборке с реальными именами клиентов.</p>
+                    </div>
+                    <div class="strengths-weak">
+                        <div><span class="sw-label">Сильные стороны</span>375 объектов, именные отзывы, детальный прайс-лист, 10+ вопросов FAQ</div>
+                        <div><span class="sw-label">Слабые стороны</span>Перегружен: 8-шаговый и 3-шаговый процесс одновременно, много слайдеров — вероятно медленнее грузится</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="competitor">
+                <div>
+                    <div class="rank-badge"><b>#4</b><small>рейтинг</small></div>
+                    <div class="swatch-row">
+                        <div class="swatch" style="background:#3a3a3a" title="тёмный"></div>
+                        <div class="swatch" style="background:#eeeeee" title="светлый"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="comp-name">В квадрате</div>
+                    <div class="comp-url">remontvkvadrateperm.ru · Пермь, б-р Гагарина 66А</div>
+                    <div class="comp-stats">
+                        <div>Яндекс <b>4.5</b></div><div>Отзывов <b>24</b></div><div>Общий балл <b>108.0</b></div>
+                    </div>
+                    <div class="comp-body">
+                        <p>Единственный конкурент с эмоциональным, не техническим позиционированием:
+                        «Мы не делаем ремонт, мы меняем вашу жизнь к лучшему». Персональный менеджер
+                        упомянут, но функционально не раскрыт. Простейшая одностраничная архитектура
+                        в выборке.</p>
+                    </div>
+                    <div class="strengths-weak">
+                        <div><span class="sw-label">Сильные стороны</span>Смелый эмоциональный слоган, персональный менеджер как преимущество</div>
+                        <div><span class="sw-label">Слабые стороны</span>Нет цен, нет детального процесса, минимум контента — самый бедный сайт в выборке</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="competitor">
+                <div>
+                    <div class="rank-badge"><b>#5</b><small>рейтинг</small></div>
+                    <div class="swatch-row">
+                        <div class="swatch" style="background:#161616" title="тёмный блок"></div>
+                        <div class="swatch" style="background:#f5f5f5" title="светлый блок"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="comp-name">Мастера Ремонта (MasterCraft)</div>
+                    <div class="comp-url">masteraremonta.pro · Пермь, ул. Ленина 76</div>
+                    <div class="comp-stats">
+                        <div>Яндекс <b>4.5</b></div><div>Отзывов <b>11</b></div><div>Общий балл <b>49.5</b></div>
+                    </div>
+                    <div class="comp-body">
+                        <p>Слабее всех по социальному доказательству, но самая продвинутая форма лида в
+                        нише: многошаговый калькулятор на 20+ полей плюс собственное приложение мониторинга
+                        «101-app». Использует ту же трёхступенчатую линейку продуктов (космет./капитальный/под
+                        ключ), что и Spattel.</p>
+                    </div>
+                    <div class="strengths-weak">
+                        <div><span class="sw-label">Сильные стороны</span>Продуктовый минималистичный дизайн, детальный калькулятор, та же линейка продуктов, что у Spattel</div>
+                        <div><span class="sw-label">Слабые стороны</span>Всего 11 отзывов — низкое доверие, самый низкий общий балл в топ-5</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="note">
+            <span class="note-icon">&#127919;</span>
+            <p>Ориентир, не конкурент: kodolov.group (Владивосток) — крупная компания с YouTube-каналом
+            230 000+ подписчиков, 7-шаговым процессом и гарантией «ремонт — 1 год, инженерные работы —
+            3 года», но без фиксированной цены до готового проекта. Дана пользователем как образец
+            масштаба, не как локальный конкурент — не участвует в скоринге ниже.</p>
+        </div>
+
+        <div class="flow-connector">
+            <svg width="2" height="24" viewBox="0 0 2 24" fill="none"><line x1="1" y1="0" x2="1" y2="24" stroke="currentColor" stroke-dasharray="3 3"/></svg>
+        </div>
+
+        <!-- Scoring -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-number">03</span>
+                <h2 class="card-title">Скоринг по 8 критериям (1–10)</h2>
+            </div>
+            <div class="card-body">
+                <div class="tbl-scroll">
+                    <table class="score">
+                        <thead><tr><th>Критерий</th><th>Новый Ремонт</th><th>СпецРемонт</th><th>Bravo</th><th>В квадрате</th><th>Мастера Ремонта</th></tr></thead>
+                        <tbody>
+                            <tr><td>Search visibility</td><td>9</td><td>7</td><td>7</td><td>6</td><td>4</td></tr>
+                            <tr><td>Review quality</td><td>9</td><td>8</td><td>7</td><td>7</td><td>6</td></tr>
+                            <tr><td>Visual design</td><td>6</td><td>5</td><td>5</td><td>6</td><td>6</td></tr>
+                            <tr><td>Mobile responsive</td><td>6</td><td>6</td><td>6</td><td>6</td><td>6</td></tr>
+                            <tr><td>Content depth</td><td>8</td><td>7</td><td>9</td><td>5</td><td>7</td></tr>
+                            <tr><td>Social proof</td><td>7</td><td>6</td><td>9</td><td>5</td><td>5</td></tr>
+                            <tr><td>CTA-стратегия</td><td>8</td><td>7</td><td>8</td><td>6</td><td>8</td></tr>
+                            <tr><td>Page speed (оценочно)</td><td>6</td><td>6</td><td>5</td><td>6</td><td>6</td></tr>
+                            <tr><td>Средний балл</td><td>7.4</td><td>6.5</td><td>7.0</td><td>5.9</td><td>6.0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="margin-top:0.9rem;font-size:0.8rem;color:var(--muted)">Visual design, mobile responsive и page speed — оценки по текстовому/структурному содержимому страницы (WebFetch), не по реальному рендерингу или Lighthouse-аудиту.</p>
+            </div>
+        </div>
+
+        <div class="flow-connector">
+            <svg width="2" height="24" viewBox="0 0 2 24" fill="none"><line x1="1" y1="0" x2="1" y2="24" stroke="currentColor" stroke-dasharray="3 3"/></svg>
+        </div>
+
+        <!-- Comparison -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-number">04</span>
+                <h2 class="card-title">Spattel на фоне рынка</h2>
+            </div>
+            <div class="card-body">
+                <div class="tbl-scroll">
+                    <table class="cmp">
+                        <thead><tr><th>Что важно</th><th>Типичный конкурент (Перми)</th><th class="us">Spattel</th></tr></thead>
+                        <tbody>
+                            <tr><td>Гарантия</td><td>1–4 года, разброс по рынку</td><td class="us">24 месяца — на уровне медианы</td></tr>
+                            <tr><td>Оплата</td><td>Без большого аванса (у части игроков)</td><td class="us">По этапам, по факту + удержание 10% до приёмки</td></tr>
+                            <tr><td>Цена за м²</td><td>Конкретные цифры на первом экране (3 из 5)</td><td class="us">Пока заглушки — разрыв, требует закрытия</td></tr>
+                            <tr><td>Ответственность</td><td>«Прораб» / «менеджер» — операционная роль</td><td class="us">Один именованный руководитель проекта — центр всего бренда</td></tr>
+                            <tr><td>Эмоциональная рамка</td><td>Нейтральные «гарантии»</td><td class="us">Прямое называние страхов клиента → снятие каждого</td></tr>
+                            <tr><td>Визуальный язык</td><td>Бирюзовый/оранжевый, стоковые фото ремонта</td><td class="us">Тёплая архитектурная палитра графит/песок/латте — уникально для ниши</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-connector">
+            <svg width="2" height="24" viewBox="0 0 2 24" fill="none"><line x1="1" y1="0" x2="1" y2="24" stroke="currentColor" stroke-dasharray="3 3"/></svg>
+        </div>
+
+        <!-- SEO -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-number">05</span>
+                <h2 class="card-title">SEO-ландшафт и ключевые слова</h2>
+            </div>
+            <div class="card-body">
+                <p>Все пять конкурентов таргетируются на широкие запросы уровня «ремонт квартир Пермь»,
+                «ремонт квартир под ключ», сегментируя дальше по типу помещения (квартиры/дома/офисы) или
+                виду работ (стены/полы/потолок/электрика). <strong>Ни один не занимает нишевую формулировку
+                «ремонт вторички»</strong> — это открытый узкий сегмент запроса, где у Spattel нет прямой
+                конкуренции по контенту.</p>
+                <p><strong>Рекомендуемые keyword-цели:</strong></p>
+                <ul class="bullet-list" style="list-style:none;margin:0.4rem 0 0.8rem">
+                    <li style="margin-bottom:0.4rem">— капитальный ремонт вторички Пермь</li>
+                    <li style="margin-bottom:0.4rem">— ремонт вторички под ключ Пермь</li>
+                    <li style="margin-bottom:0.4rem">— личный руководитель ремонта / руководитель проекта ремонта Пермь</li>
+                    <li style="margin-bottom:0.4rem">— фиксированная смета на ремонт квартиры Пермь</li>
+                    <li>— ремонт хрущёвки / брежневки под ключ Пермь (частый физический тип вторички у ICP)</li>
+                </ul>
+                <p>Каналы по приоритету (из портрета заказчика): Avito → Яндекс Директ (горячий трафик на
+                конкретные запросы выше) → 2ГИС → риелторы/агентства недвижимости как реферальный канал →
+                VK/чаты новосёлов и сарафан.</p>
+            </div>
+        </div>
+
+        <div class="flow-connector">
+            <svg width="2" height="24" viewBox="0 0 2 24" fill="none"><line x1="1" y1="0" x2="1" y2="24" stroke="currentColor" stroke-dasharray="3 3"/></svg>
+        </div>
+
+        <!-- Patterns -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-number">06</span>
+                <h2 class="card-title">Паттерны топа рынка</h2>
+            </div>
+            <div class="card-body">
+                <ol class="pattern-list">
+                    <li><div><b>Гарантия от 2 лет, показанная на первом экране.</b><p>Все пятеро её заявляют; разброс 1–4 года. Spattel с 24 месяцами — на уровне медианы, не хуже.</p></div></li>
+                    <li><div><b>Оплата без большого аванса, поэтапно по факту.</b><p>Явно заявлено у лидеров рейтинга — рынок подтверждает, что это ключевой снятый страх, а не уникальность Spattel.</p></div></li>
+                    <li><div><b>Конкретная цена за м² на первом экране, а не «по запросу».</b><p>3 из 5 конкурентов показывают реальные цифры сразу. У прототипа Spattel сейчас плейсхолдеры — разрыв, который нужно закрыть до запуска.</p></div></li>
+                    <li><div><b>Цифровая прозрачность процесса как премиум-фактор.</b><p>Веб-камера, приложение мониторинга, фотоотчёты — рынок уже приучает клиента ждать цифровой контроль. Направление для будущей роадмапы (личный кабинет), не для лендинга сейчас.</p></div></li>
+                    <li><div><b>Визуально все пять — типовые «стройфирменные» сайты.</b><p>Светлый фон, бирюзовые/оранжевые акценты, стоковые фото. Тёплая архитектурная палитра Spattel не встречается ни у одного — подтверждённое данными отличие.</p></div></li>
+                    <li><div><b>Никто не называет страхи клиента напрямую.</b><p>Конкуренты используют нейтральные «гарантии» вместо явного проговаривания тревоги («бросят», «обманут», «смета поедет»). Блок «страх → решение» в прототипе Spattel — уникальный для ниши приём.</p></div></li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="flow-connector">
+            <svg width="2" height="24" viewBox="0 0 2 24" fill="none"><line x1="1" y1="0" x2="1" y2="24" stroke="currentColor" stroke-dasharray="3 3"/></svg>
+        </div>
+
+        <!-- Design direction -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-number">07</span>
+                <h2 class="card-title">Рекомендованное направление дизайна</h2>
+            </div>
+            <div class="card-body">
+                <p><strong>Палитра — сохранить текущую, ни у кого в нише её нет:</strong></p>
+                <div class="palette-row">
+                    <div class="palette-chip"><div class="sq" style="background:#292420"></div>Espresso</div>
+                    <div class="palette-chip"><div class="sq" style="background:#E8E0D4"></div>Sand</div>
+                    <div class="palette-chip"><div class="sq" style="background:#B0876A"></div>Putty (accent)</div>
+                    <div class="palette-chip"><div class="sq" style="background:#FAF6EF;border-color:#ddd"></div>Plaster</div>
+                </div>
+                <p><strong>Типографика:</strong> Hanken Grotesk (текст) + Spline Sans Mono (моно-акценты, теги, цифры шагов) — уже выбраны верно, ни один конкурент не использует моно-акценты, это добавляет ощущение точности/технологичности на фоне «стройфирменных» шаблонов.</p>
+                <p><strong>Структура:</strong> сохранить одностраничную архитектуру с якорями (как у лидера #1 и «В квадрате», но с контентной глубиной уровня Bravo/СпецРемонта) — одна цель, одна форма, без распыления на множество CTA.</p>
+                <p><strong>Что избегать:</strong> избыточные множественные пересекающиеся CTA и дублирующиеся прайс-листы (антипаттерн Bravo — перегружает страницу); нейтральные, ничего не говорящие формулировки гарантий без привязки к конкретному страху клиента.</p>
+                <p><strong>Анимация:</strong> сдержанный reveal-скролл (уже реализован в прототипе через IntersectionObserver) — этого достаточно для лендинга-теста; сложные scroll-triggered 3D-сцены не нужны на этом этапе (ТЗ прямо ограничивает объём на старте).</p>
+                <div class="tag-row">
+                    <span class="tag">Тёплая архитектурная палитра</span>
+                    <span class="tag">Hanken Grotesk + Spline Sans Mono</span>
+                    <span class="tag">Один оффер, одна форма</span>
+                    <span class="tag">Явное называние страхов</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>SPATTEL &mdash; WEBSITE INTELLIGENCE, КОНКУРЕНТНЫЙ АНАЛИЗ, ПЕРМЬ</p>
+    </footer>
+</div>
+
+</body>
+</html>

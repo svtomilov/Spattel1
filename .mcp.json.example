@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "firecrawl": {
+      "command": "npx",
+      "args": ["-y", "firecrawl-mcp"],
+      "env": {
+        "FIRECRAWL_API_KEY": "fc-YOUR_KEY_HERE"
+      }
+    },
+    "vercel": {
+      "type": "http",
+      "url": "https://mcp.vercel.com"
+    }
+  }
+}

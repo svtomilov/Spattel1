@@ -1,0 +1,8 @@
+.DS_Store
+**/.DS_Store
+
+# Local MCP config contains live API keys — see .mcp.json.example
+.mcp.json
+
+# Personal/local Claude Code settings, not meant to be shared
+.claude/settings.local.json

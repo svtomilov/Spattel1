@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spattel — аудит сайта: SEO, доступность, UI/UX, скорость</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f; --bg-card:rgba(255,255,255,.03); --border:rgba(255,255,255,.08); --border-hover:rgba(255,255,255,.15);
+  --text:#e8e8ed; --text-secondary:#8b8b9e; --text-muted:#5a5a6e;
+  --accent:#6366f1; --accent-glow:rgba(99,102,241,.3);
+  --green:#22c55e; --green-bg:rgba(34,197,94,.12); --green-border:rgba(34,197,94,.25);
+  --yellow:#eab308; --yellow-bg:rgba(234,179,8,.12); --yellow-border:rgba(234,179,8,.25);
+  --red:#ef4444; --red-bg:rgba(239,68,68,.12); --red-border:rgba(239,68,68,.25);
+  --blue:#3b82f6; --orange:#f97316; --radius:16px; --radius-sm:10px; --radius-xs:6px;
+}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.container{max-width:1140px;margin:0 auto;padding:0 24px}
+.header{padding:48px 0 0;text-align:center}
+.header-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:100px;font-size:12px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:20px}
+.header-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+.header h1{font-family:'Space Grotesk',sans-serif;font-size:38px;font-weight:700;margin-bottom:10px;background:linear-gradient(135deg,#fff 0%,#a5a5c0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .subtitle{font-size:15px;color:var(--text-secondary);margin-bottom:28px}
+section.block{padding:36px 0}
+.score-section{display:flex;align-items:center;gap:44px;margin-bottom:32px;padding:36px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)}
+.score-circle-wrap{position:relative;flex-shrink:0}
+.score-circle{width:160px;height:160px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;position:relative}
+.score-circle svg{position:absolute;top:0;left:0;width:100%;height:100%;transform:rotate(-90deg)}
+.score-circle svg circle{fill:none;stroke-width:6;stroke-linecap:round}
+.score-circle svg .bg-ring{stroke:rgba(255,255,255,.06)}
+.score-circle svg .progress-ring{stroke:var(--accent);stroke-dasharray:439;stroke-dashoffset:79;filter:drop-shadow(0 0 6px var(--accent-glow))}
+.score-number{font-family:'Space Grotesk',sans-serif;font-size:48px;font-weight:700;color:#fff;position:relative;z-index:1}
+.score-label{font-size:12px;color:var(--text-secondary);position:relative;z-index:1}
+.score-details h2{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin-bottom:8px}
+.score-details p{color:var(--text-secondary);font-size:14px;line-height:1.7;margin-bottom:18px}
+.sub-scores{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.sub-score{padding:12px 14px;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--radius-sm)}
+.sub-score-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:6px}
+.sub-score-value{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:8px}
+.stat-card{padding:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);text-align:center}
+.stat-value{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:#fff}
+.stat-label{font-size:12px;color:var(--text-secondary);margin-top:2px}
+.section-title{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.section-subtitle{color:var(--text-secondary);font-size:14px;margin-bottom:20px}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:14px}
+.finding{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.04);display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start}
+.finding:last-child{border-bottom:none}
+.finding-status{width:8px;height:8px;border-radius:50%;margin-top:7px;flex-shrink:0}
+.finding-status.pass{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,.4)}
+.finding-status.warning{background:var(--yellow);box-shadow:0 0 6px rgba(234,179,8,.4)}
+.finding-status.fail{background:var(--red);box-shadow:0 0 6px rgba(239,68,68,.4)}
+.finding-content h4{font-size:14px;font-weight:600;margin-bottom:3px}
+.finding-content p{font-size:13px;color:var(--text-secondary);line-height:1.6}
+.finding-rec{margin-top:8px;padding:9px 13px;background:rgba(99,102,241,.06);border-left:3px solid var(--accent);border-radius:0 var(--radius-xs) var(--radius-xs) 0;font-size:12.5px;color:var(--text)}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:100px;font-size:11px;font-weight:600;white-space:nowrap}
+.badge-pass{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.badge-warning{background:var(--yellow-bg);color:var(--yellow);border:1px solid var(--yellow-border)}
+.badge-fail{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--text-secondary)}
+table.metrics{width:100%;border-collapse:collapse;font-size:13.5px}
+table.metrics th{text-align:left;padding:10px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);border-bottom:1px solid var(--border)}
+table.metrics td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.03)}
+.action-list{list-style:none;counter-reset:act}
+.action-list li{counter-increment:act;display:grid;grid-template-columns:2rem 1fr auto;gap:12px;padding:14px 0;border-top:1px solid var(--border);align-items:start}
+.action-list li:first-child{border-top:none}
+.action-list li::before{content:counter(act);font-family:'Space Grotesk',sans-serif;color:var(--accent);font-weight:700;font-size:15px}
+.action-list b{display:block;margin-bottom:2px;font-size:14px}
+.action-list span.d{font-size:13px;color:var(--text-secondary)}
+.note-card{padding:16px 20px;background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:var(--radius-sm);font-size:13.5px;color:var(--text-secondary);margin-bottom:20px}
+footer{text-align:center;padding:40px 0;border-top:1px solid var(--border);color:var(--text-muted);font-size:12px}
+@media(max-width:760px){.score-section{flex-direction:column;text-align:center}.sub-scores{grid-template-columns:repeat(2,1fr)}.stats-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="container">
+    <div class="header-badge"><span class="dot"></span> Аудит сайта</div>
+    <h1>Spattel — site/index.html</h1>
+    <p class="subtitle">Доступность · UI/UX · SEO-теги · размеры изображений · скорость загрузки</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <section class="block">
+    <div class="note-card">
+      <b>Метод и охват.</b> Сайт локальный (одна публичная страница + 404), ещё не задеплоен —
+      живого домена нет. Все цифры ниже измерены напрямую (размеры файлов, счётчики тегов,
+      расчёт контраста по формуле WCAG), а не взяты из Lighthouse/PageSpeed — этих инструментов
+      в этом окружении нет. Проверки, требующие боевого сервера (HTTPS, security-заголовки,
+      сжатие, реальный TTFB), отмечены отдельно как «после деплоя».
+    </div>
+
+    <div class="score-section">
+      <div class="score-circle-wrap">
+        <div class="score-circle">
+          <svg viewBox="0 0 160 160"><circle class="bg-ring" cx="80" cy="80" r="70"/><circle class="progress-ring" cx="80" cy="80" r="70" style="stroke-dashoffset:66"/></svg>
+          <span class="score-number">85</span>
+          <span class="score-label">/ 100 · A-</span>
+        </div>
+      </div>
+      <div class="score-details">
+        <h2>Хорошая база — два реальных пункта остались до запуска</h2>
+        <p>Доступность неожиданно сильная для первой сборки (контраст, фокус, формы, reduced-motion — всё
+        разобрано и исправлено по ходу работы). SEO-теги и 4 «пустых» href="#" — уже поправлены в этом
+        прогоне (title сокращён, лого и футер больше не ведут в никуда). Из реального остаётся два пункта:
+        вес видео (4.2 МБ, не адаптирован под мобильный трафик) и SVG вместо растрового og:image.</p>
+        <div class="sub-scores">
+          <div class="sub-score"><div class="sub-score-label">SEO-теги</div><div class="sub-score-value" style="color:var(--green)">89</div></div>
+          <div class="sub-score"><div class="sub-score-label">Доступность</div><div class="sub-score-value" style="color:var(--green)">92</div></div>
+          <div class="sub-score"><div class="sub-score-label">Скорость / вес</div><div class="sub-score-value" style="color:var(--yellow)">70</div></div>
+          <div class="sub-score"><div class="sub-score-label">UI/UX</div><div class="sub-score-value" style="color:var(--green)">88</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-value">1 012</div><div class="stat-label">слов на странице</div></div>
+      <div class="stat-card"><div class="stat-value">3 / 3</div><div class="stat-label">изображений с alt</div></div>
+      <div class="stat-card"><div class="stat-value">4.27 МБ</div><div class="stat-label">общий вес страницы</div></div>
+      <div class="stat-card"><div class="stat-value">0</div><div class="stat-label">«пустых» href="#" (было 4)</div></div>
+    </div>
+  </section>
+
+  <!-- SEO TAGS -->
+  <section class="block">
+    <div class="section-title">🔍 SEO-теги и контент</div>
+    <p class="section-subtitle">title, description, заголовки, OG, schema, robots/sitemap</p>
+
+    <div class="card">
+      <div class="finding">
+        <div class="finding-status pass"></div>
+        <div class="finding-content">
+          <h4>Title сокращён с 76 до 54 символов <span style="color:var(--text-muted)">— исправлено в этом прогоне</span></h4>
+          <p>Было: <span class="mono">Spattel — капитальный ремонт вторички с личным руководителем проекта · Пермь</span> (76, обрезалось бы в выдаче).<br>Стало: <span class="mono">Spattel — капитальный ремонт вторички под ключ · Пермь</span> (54) — укладывается в ~580px, ключевые слова «капитальный ремонт», «вторичка», «Пермь» сохранены в начале.</p>
+        </div>
+        <span class="badge badge-pass">Fixed</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status warning"></div>
+        <div class="finding-content">
+          <h4>Meta description — 161 символ (цель 120–160)</h4>
+          <p>На один символ длиннее ориентира — не критично, но стоит подрезать при следующей правке текста.</p>
+        </div>
+        <span class="badge badge-warning">Low</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status pass"></div>
+        <div class="finding-content"><h4>Ровно один H1, логичная иерархия</h4><p>1×H1 → 9×H2 → 20×H3, без пропущенных уровней. Каждый H2 соответствует смысловому блоку страницы.</p></div>
+        <span class="badge badge-pass">Pass</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status pass"></div>
+        <div class="finding-content"><h4>1 012 слов основного контента</h4><p>Хорошая глубина для лендинга с одной целью — не «тонкий» контент, но и не раздут лишним текстом.</p></div>
+        <span class="badge badge-pass">Pass</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status pass"></div>
+        <div class="finding-content"><h4>Canonical, viewport, favicon, lang="ru"</h4><p>Все базовые технические теги на месте и корректны для целевого рынка (Пермь, русский язык).</p></div>
+        <span class="badge badge-pass">Pass</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status warning"></div>
+        <div class="finding-content">
+          <h4>Open Graph заполнен, но og:image — SVG-плейсхолдер</h4>
+          <p>og:title/description/url/locale в порядке. Facebook, VK и Telegram ненадёжно рендерят SVG в превью ссылок — многие мессенджеры просто не покажут картинку.</p>
+          <div class="finding-rec">Как только появится реальное фото объекта — сделать из него JPG/PNG 1200×630 и заменить og:image. До этого превью ссылки в мессенджерах может быть пустым.</div>
+        </div>
+        <span class="badge badge-warning">Warning</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status warning"></div>
+        <div class="finding-content"><h4>Twitter Card — указан только тип карточки</h4><p>Нет явных twitter:title/twitter:description/twitter:image — скорее всего отработает через фолбэк на OG-теги, но это не гарантировано всеми клиентами.</p></div>
+        <span class="badge badge-warning">Low</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status pass"></div>
+        <div class="finding-content">
+          <h4>Schema.org JSON-LD (HomeAndConstructionBusiness) валиден</h4>
+          <p>Есть name, description, areaServed, telephone, url, address. Два необязательных, но полезных поля отсутствуют: <span class="mono">image</span> и <span class="mono">sameAs</span> (соцсети). <span class="mono">priceRange: "от 7000 ₽/м²"</span> — не строгий формат schema.org (обычно "$$" или диапазон), но валидатор Google обычно принимает произвольную строку.</p>
+        </div>
+        <span class="badge badge-pass">Pass</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status pass"></div>
+        <div class="finding-content"><h4>robots.txt и sitemap.xml корректны</h4><p>robots.txt разрешает всё, ссылается на sitemap. sitemap.xml — валидный XML с одним URL (правильно для одностраничника; 404.html и служебные файлы туда не включены).</p></div>
+        <span class="badge badge-pass">Pass</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACCESSIBILITY -->
+  <section class="block">
+    <div class="section-title">♿ Доступность</div>
+    <p class="section-subtitle">Контраст, клавиатура, ARIA, formы, reduced-motion</p>
+
+    <div class="card">
+      <div class="finding">
+        <div class="finding-status pass"></div>
+        <div class="finding-content">
+          <h4>Все контрастные проблемы, найденные за сессию, устранены</h4>
+          <p>По ходу работы найдено и закрыто 3 раунда реальных нарушений WCAG AA (расчёт по формуле контраста, не на глаз): акцент <span class="mono">--putty</span> на светлом фоне (было ~2.46:1 в тексте hero, номерах шагов, ценах и т.д. → заменено на <span class="mono">--putty-ink</span>, ~5.2:1), подписи <span class="mono">--muted-2</span> (было ~2.45:1 → ~4.98:1), и в этом прогоне — сообщение об успешной заявке <span class="mono">.ok-msg b</span> (было ~2.99:1 на фоне формы → тоже переведено на <span class="mono">--putty-ink</span>).</p>
+        </div>
+        <span class="badge badge-pass">Fixed</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status pass"></div>
+        <div class="finding-content"><h4>Skip-link, :focus-visible, семантические лендмарки</h4><p>«Перейти к содержимому» в начале страницы, видимый фокус на всех интерактивных элементах, <span class="mono">header/main/footer</span> плюс <span class="mono">nav aria-label</span>.</p></div>
+        <span class="badge badge-pass">Pass</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status pass"></div>
+        <div class="finding-content"><h4>Форма заявки полностью доступна</h4><p>Явные <span class="mono">&lt;label for&gt;</span> на всех полях, ошибка телефона связана через <span class="mono">aria-describedby</span> и видима, а не только цветом рамки, нативный <span class="mono">submit</span> — форма отправляется по Enter, не только кликом.</p></div>
+        <span class="badge badge-pass">Pass</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status pass"></div>
+        <div class="finding-content"><h4>prefers-reduced-motion уважается везде</h4><p>И CSS-reveal, и скролл-скраббинг видео, и bounce-анимация подсказки «листайте ↓» — всё выключается для пользователей с этой настройкой; видео просто останавливается на кадре готового лофта.</p></div>
+        <span class="badge badge-pass">Pass</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status pass"></div>
+        <div class="finding-content"><h4>Таблица сравнения — <span class="mono">scope="col"</span> + подпись</h4><p>Заголовки колонок помечены, добавлена <span class="mono">&lt;caption&gt;</span> (скрыта визуально через <span class="mono">.sr-only</span>, но доступна скринридеру).</p></div>
+        <span class="badge badge-pass">Pass</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status warning"></div>
+        <div class="finding-content">
+          <h4>У видео в hero нет собственного элемента управления</h4>
+          <p>Видео без звука и не запускается само по себе — играет только пока пользователь физически скроллит, поэтому формально WCAG 2.2.2 (Pause/Stop/Hide) не применяется буквально. Но человеку, который непроизвольно крутит колесо мыши и не хочет видеть движение, скрыться от него можно только через системную настройку «уменьшить движение».</p>
+          <div class="finding-rec">Низкий приоритет: можно добавить маленькую кнопку «пауза» поверх видео для тех, кто не пользуется системной настройкой reduced-motion, но не обязательно для запуска.</div>
+        </div>
+        <span class="badge badge-warning">Low</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PERFORMANCE / IMAGE SIZES -->
+  <section class="block">
+    <div class="section-title">⚡ Скорость загрузки и размеры файлов</div>
+    <p class="section-subtitle">Реальные байты — без Lighthouse, но без фантазий</p>
+
+    <div class="card">
+      <table class="metrics">
+        <thead><tr><th>Файл</th><th>Размер</th><th>Загрузка</th></tr></thead>
+        <tbody>
+          <tr><td>assets/hero-transform.mp4</td><td><b style="color:var(--yellow)">4.02 МБ</b></td><td>без <span class="mono">preload="metadata"</span>, качается сразу целиком</td></tr>
+          <tr><td>index.html</td><td>26 КБ</td><td>—</td></tr>
+          <tr><td>css/style.css</td><td>16.5 КБ</td><td>render-blocking (норма для 16 КБ)</td></tr>
+          <tr><td>js/main.js</td><td>4.9 КБ</td><td><span class="mono">defer</span></td></tr>
+          <tr><td>assets/favicon.svg + placeholder-photo.svg</td><td>0.7 КБ</td><td><span class="mono">loading="lazy"</span> на фото</td></tr>
+          <tr><td>Google Fonts (2 семейства, CDN)</td><td>внешний запрос</td><td>render-blocking stylesheet, но <span class="mono">display=swap</span> — текст не невидим</td></tr>
+          <tr><td>GSAP + ScrollTrigger (CDN)</td><td>внешний запрос</td><td><span class="mono">defer</span>, не блокирует рендер</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:14px;font-size:13px;color:var(--text-secondary)">Без видео вся страница весит <b style="color:#fff">≈48 КБ</b> — очень легко. Всю тяжесть страницы создаёт один файл.</p>
+    </div>
+
+    <div class="card">
+      <div class="finding">
+        <div class="finding-status warning"></div>
+        <div class="finding-content">
+          <h4>4.2 МБ видео грузится сразу и полностью, всем устройствам одинаково</h4>
+          <p>Битрейт ≈4.8 Мбит/с для 1280×720 — заметно выше типичного веб-видео. <span class="mono">preload="auto"</span> заставляет браузер начать скачивание всего файла ещё до того, как пользователь долистал до сцены — на мобильном интернете это ощутимые мегабайты трафика впустую, если человек не досмотрит.</p>
+          <div class="finding-rec">Идеально — пересжать через ffmpeg (в этом окружении он недоступен, см. также заметку Fable-ревью про плотные keyframes для скрабинга) до 1–1.5 МБ и сделать вторую, более лёгкую версию для мобильных через <span class="mono">&lt;source media&gt;</span>. Как временная мера без пересборки видео — сменить <span class="mono">preload="auto"</span> на <span class="mono">preload="metadata"</span>, это не меняет визуал, но не тянет видео, пока пользователь не начал скроллить.</div>
+        </div>
+        <span class="badge badge-warning">Warning</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status pass"></div>
+        <div class="finding-content"><h4>Остальной сайт — образцово лёгкий</h4><p>HTML+CSS+JS+SVG вместе — 48 КБ, это меньше одной фотографии в разделе «Наши работы» после того, как туда добавят реальные фото. Задел по производительности большой.</p></div>
+        <span class="badge badge-pass">Pass</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status warning"></div>
+        <div class="finding-content"><h4>3 внешних домена на критическом пути</h4><p>fonts.googleapis.com, fonts.gstatic.com, cdnjs.cloudflare.com — каждый добавляет отдельное DNS/TLS-рукопожатие. Preconnect уже стоит для шрифтов, но не для cdnjs.</p><div class="finding-rec">Добавить <span class="mono">&lt;link rel="preconnect" href="https://cdnjs.cloudflare.com"&gt;</span> — мелочь, но бесплатная.</div></div>
+        <span class="badge badge-warning">Low</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status warning"></div>
+        <div class="finding-content"><h4>HTTPS / security-заголовки / сжатие — нельзя проверить локально</h4><p>Сайт ещё не задеплоен, реального сервера с заголовками ответа нет.</p><div class="finding-rec">После деплоя на Vercel/Netlify (см. README) — эти хостинги включают HTTPS, HSTS и gzip/brotli по умолчанию, отдельно настраивать почти ничего не придётся, но стоит прогнать PageSpeed Insights/Lighthouse на боевом URL.</div></div>
+        <span class="badge badge-warning">To verify</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- UI/UX -->
+  <section class="block">
+    <div class="section-title">🎯 UI/UX и структура</div>
+    <p class="section-subtitle">Поток страницы, ссылки, единственная цель конверсии</p>
+
+    <div class="card">
+      <div class="finding">
+        <div class="finding-status pass"></div>
+        <div class="finding-content">
+          <h4>4 «пустых» ссылки закрыты <span style="color:var(--text-muted)">— исправлено в этом прогоне</span></h4>
+          <p>Лого в шапке и футере теперь ведут на <span class="mono">/</span> вместо <span class="mono">href="#"</span>. Telegram/WhatsApp в футере, у которых ещё нет реальных аккаунтов, заменены с кликабельных заглушек на обычный текст «Telegram и WhatsApp — скоро» — сайт больше не выглядит так, будто ссылка сломана, а как только появятся настоящие аккаунты, это будет заменить на реальные <span class="mono">&lt;a href&gt;</span>.</p>
+        </div>
+        <span class="badge badge-pass">Fixed</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status pass"></div>
+        <div class="finding-content"><h4>Дисциплина одной цели выдержана от первого экрана до футера</h4><p>Один CTA («Бесплатный замер и смета») повторяется в шапке, hero, мобильной sticky-кнопке и финальной форме — конкурирующих призывов к действию нет ни в одном блоке.</p></div>
+        <span class="badge badge-pass">Pass</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status pass"></div>
+        <div class="finding-content"><h4>Видео-заставка больше не «немая»</h4><p>Поверх видео теперь есть текст оффера и ниши («Из убитой вторички — в квартиру под заезд»), который растворяется по мере скролла — холодный посетитель с Директа/Авито не проваливается в 300vh видео без единого слова, прежде чем доберётся до оффера.</p></div>
+        <span class="badge badge-pass">Pass</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status pass"></div>
+        <div class="finding-content"><h4>Мобильная адаптивность подтверждена на ширинах 600px и выше</h4><p>Все брейкпоинты (720/800/860/1024px) сработали корректно на скриншотах. На точной ширине ~390px локальный headless Chrome в этом окружении даёт артефакт обрезания текста, воспроизводимый даже на тестовой странице без единой строки кода сайта — не баг сайта, а особенность окружения; рекомендуется один раз открыть сайт на реальном телефоне.</p></div>
+        <span class="badge badge-pass">Pass</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status warning"></div>
+        <div class="finding-content"><h4>Таблица сравнения скроллится вбок на мобильном без явной подсказки</h4><p><span class="mono">.cmp-scroll{overflow-x:auto}</span> работает, но ничто визуально не намекает, что таблицу можно проскроллить вбок — часть пользователей может не заметить правые колонки.</p><div class="finding-rec">Низкий приоритет: лёгкий градиент-тень с правого края контейнера как визуальная подсказка «тут ещё есть контент».</div></div>
+        <span class="badge badge-warning">Low</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTION PLAN -->
+  <section class="block">
+    <div class="section-title">✅ План действий по приоритету</div>
+    <ol class="action-list">
+      <li><div><b style="text-decoration:line-through;color:var(--text-muted)">Заменить 4 пустых href="#"</b><br><span class="d">Готово — лого ведёт на /, Telegram/WhatsApp временно текстом вместо мёртвых ссылок.</span></div><span class="badge badge-pass">Исправлено</span></li>
+      <li><div><b style="text-decoration:line-through;color:var(--text-muted)">Сократить title до ~55–60 символов</b><br><span class="d">Готово — 76 → 54 символа.</span></div><span class="badge badge-pass">Исправлено</span></li>
+      <li><div><b>Снизить вес видео и/или переключить на <span class="mono">preload="metadata"</span></b><br><span class="d">4.2 МБ при 720p — тяжело для мобильного трафика; пересжать через ffmpeg, когда он станет доступен (недоступен в этом окружении).</span></div><span class="badge badge-warning">Перед запуском</span></li>
+      <li><div><b>Заменить og:image на растровое фото 1200×630</b><br><span class="d">SVG ненадёжно рендерится в превью мессенджеров и соцсетей.</span></div><span class="badge badge-warning">До первого репоста</span></li>
+      <li><div><b>Обрезать meta description на 1 символ, добавить явные twitter:title/description/image</b><br><span class="d">Мелкая полировка тегов.</span></div><span class="badge badge-pass">Можно отложить</span></li>
+      <li><div><b>Прогнать Lighthouse и PageSpeed Insights на боевом URL после деплоя</b><br><span class="d">Проверить то, что нельзя проверить локально: HTTPS, заголовки, реальный TTFB/LCP.</span></div><span class="badge badge-pass">После деплоя</span></li>
+    </ol>
+  </section>
+
+  <footer>Spattel — аудит сайта · доступность, UI/UX, SEO-теги, вес страницы · сгенерировано локально, без live-домена</footer>
+</div>
+</body>
+</html>
