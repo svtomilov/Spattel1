@@ -56,14 +56,23 @@ header{position:sticky;top:0;z-index:50;background:rgba(232,224,212,.88);backdro
 @keyframes hint-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
 @media(max-width:1024px){.hero-stage{height:250vh}}
 @media(max-width:720px){
-  .hero-stage{height:200vh}
-  .stage-overlay{padding-bottom:calc(150px + env(safe-area-inset-bottom))}
-  /* Fit by width instead of cropping to fill height — the video is 16:9
-     landscape but the sticky stage is a tall portrait box on phones, so
-     cover() was cropping off the side walls and showing only the centre.
-     contain() shows the full width (whole room, no cropped sides) and
-     letterboxes above/below with the existing gradient background. */
-  .stage-video{object-fit:contain}
+  /* Forcing the sticky stage to a full 100vh phone screen was the source of
+     both earlier problems: object-fit:cover cropped the side walls off a
+     16:9 video in a tall portrait box, and object-fit:contain fixed that but
+     left big empty gradient bands above/below that read as "gaps". Instead,
+     size the pinned box to the video's own aspect ratio — full width, zero
+     crop, zero letterbox — and give the whole scroll-driver the same dark
+     gradient so there's no sand-coloured gap around the short pinned box
+     while it's mid-scroll. The heading itself lives in the normal .hero
+     section right after — no overlap needed.  */
+  .hero-stage{height:140vh;background:linear-gradient(155deg,#3A332C 0%,#292420 55%,#1c1815 100%)}
+  .stage-sticky{height:auto;aspect-ratio:16/9;background:none}
+  .stage-video{object-fit:cover}
+  .stage-overlay{padding:16px 16px 20px;gap:4px}
+  .so-brand{font-size:10px}
+  .so-line{font-size:15px}
+  .so-hint{display:none}
+  .stage-fade-out{display:none}
 }
 @media(prefers-reduced-motion:reduce){.hero-stage{height:100vh}.stage-fade-out{display:none}.so-hint{display:none}}
 
