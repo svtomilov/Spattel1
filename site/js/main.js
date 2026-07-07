@@ -35,10 +35,26 @@
     if (video.error) { hideStage(); return; }
     video.addEventListener('error', hideStage);
 
+    // Mobile browsers (notably iOS Safari) often decode and paint no frame at
+    // all for a <video> that has never been played — setting currentTime alone
+    // silently does nothing until playback has started at least once. A muted
+    // video is allowed to play() without a user gesture, so "prime" it with an
+    // immediate play/pause right after metadata loads: this unlocks the decoder
+    // and makes programmatic seeking actually paint frames on scroll.
+    var primed = false;
+    function primeVideo() {
+      if (primed) return;
+      primed = true;
+      var p = video.play();
+      if (p && p.catch) p.catch(function () { /* ignored — seeking is attempted regardless */ });
+      video.pause();
+    }
+
     if (prefersReduced) {
       // Respect reduced motion: rest on the resolved "loft" end-state, no scrubbing.
       section.classList.add('hero-stage--static');
       var showEnd = function () {
+        primeVideo();
         try { video.currentTime = Math.max(0, video.duration - 0.05); } catch (e) {}
       };
       if (video.readyState >= 1) showEnd();
@@ -49,6 +65,7 @@
     var duration = 0;
     function setDuration() {
       duration = video.duration || 0;
+      primeVideo();
       onScroll(); // sync the frame to the current scroll position right away
     }
     // Metadata may already be available (cache/fast load) before this runs.
