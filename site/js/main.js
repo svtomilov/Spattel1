@@ -25,8 +25,9 @@
     // transformation plays forward/backward as the user scrolls up/down.
     var section = document.getElementById('hero3d');
     var video = document.getElementById('stageVideo');
+    var sticky = section && section.querySelector('.stage-sticky');
     var overlay = section && section.querySelector('.stage-overlay');
-    var reveal = section && section.querySelector('.stage-reveal');
+    var hint = overlay && overlay.querySelector('.so-hint');
     if (!section || !video) return;
 
     // If the video can't load at all, collapse the stage instead of leaving
@@ -60,6 +61,21 @@
       if (video.readyState >= 1) showEnd();
       else video.addEventListener('loadedmetadata', showEnd, { once: true });
       return;
+    }
+
+    // The intro line ("Из убитой вторички…") docks onto the lower part of the
+    // video at scrub end (translateY 0 — its CSS anchor). At scroll 0 it is
+    // pushed DOWN by overlayRise px, i.e. below the pinned video, centred in
+    // the free strip of screen under it. On desktop the video fills the whole
+    // viewport under the header, the free strip is 0, and the line just stays
+    // put at the bottom of the frame.
+    var overlayRise = 0;
+    function measureRise() {
+      if (!overlay || !sticky) return;
+      var head = document.querySelector('header');
+      var headH = head ? head.offsetHeight : 0;
+      var free = window.innerHeight - headH - sticky.offsetHeight;
+      overlayRise = free > 40 ? free / 2 + overlay.offsetHeight / 2 : 0;
     }
 
     var duration = 0;
@@ -104,19 +120,20 @@
         clearTimeout(settleTimer);
         settleTimer = setTimeout(function () { seekTo(progress); }, SEEK_INTERVAL_MS + 40);
 
-        // Intro overlay text dissolves within the first ~12% of scroll.
-        if (overlay) overlay.style.opacity = Math.max(0, 1 - progress / 0.12);
-        // The real heading rises from below over the last 50% of the scrub
-        // and lands flush with the bottom of the frame exactly as it ends.
-        if (reveal) {
-          var revealT = Math.max(0, Math.min(1, (progress - 0.5) / 0.5));
-          reveal.style.transform = 'translateY(' + (100 - 100 * revealT) + '%)';
-        }
+        // Intro line rides up from below the video to its bottom edge.
+        if (overlay) overlay.style.transform = 'translateY(' + overlayRise * (1 - progress) + 'px)';
+        // The "листайте" hint has done its job once scrolling starts.
+        if (hint) hint.style.opacity = Math.max(0, 1 - progress / 0.35);
         ticking = false;
       });
     }
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
+    window.addEventListener('resize', function () { measureRise(); onScroll(); }, { passive: true });
+    // Re-measure once webfonts land — they change the overlay's height.
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { measureRise(); onScroll(); });
+    }
+    measureRise();
     onScroll();
   }
 

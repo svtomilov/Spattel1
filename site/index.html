@@ -44,7 +44,7 @@
 <header>
   <div class="wrap hd">
     <a class="logo" href="/" aria-label="Spattel — на главную">
-      <svg width="34" height="34" viewBox="0 0 100 100" aria-hidden="true"><path d="M11,46 C30,72 70,72 89,46 C71,60 29,60 11,46 Z" fill="#B0876A"/></svg>
+      <svg width="40" height="40" viewBox="0 0 100 100" aria-hidden="true"><path d="M11,46 C30,72 70,72 89,46 C71,60 29,60 11,46 Z" fill="#B0876A"/></svg>
       <b>Spattel</b>
     </a>
     <nav class="hd-r" aria-label="Основная навигация">
@@ -68,33 +68,39 @@
   <div class="stage-sticky">
     <div class="stage-frame">
       <video id="stageVideo" class="stage-video" src="assets/hero-transform.mp4" muted playsinline webkit-playsinline preload="auto"></video>
+      <!--
+        Интро-строка. На мобильных видео — короткий 16:9-блок сразу под шапкой,
+        а эта строка стартует ПОД ним, в середине свободной части экрана, и по
+        мере прокрутки поднимается, к концу анимации оказываясь поверх нижней
+        части видео (transform двигает js/main.js). На десктопе видео занимает
+        весь экран под шапкой, свободного места снизу нет — строка просто
+        остаётся у нижнего края кадра.
+      -->
       <div class="stage-overlay" id="stageOverlay">
         <p class="so-brand">Spattel · ремонт вторички · Пермь</p>
         <p class="so-line">Из убитой вторички — в квартиру под заезд</p>
         <p class="so-hint" aria-hidden="true">листайте ↓</p>
       </div>
     </div>
-    <!--
-      Slides up from below as the scrub nears its end (last ~50% of progress)
-      and lands flush with the bottom of the frame exactly when it finishes —
-      js/main.js drives the transform, see stageReveal in initHeroStage().
-    -->
-    <div class="stage-reveal" id="stageReveal" aria-labelledby="hero-h1">
-      <div class="wrap hero-copy">
-        <p class="eyebrow">Капитальный ремонт вторички · Пермь</p>
-        <h1 id="hero-h1">Личный <em>руководитель ремонта</em>. Один договор. Одна ответственность.</h1>
-        <p class="lead">Вы общаетесь только с одним человеком. Он подбирает бригаду, контролирует качество, закупает материалы и ведёт сроки. Вы просто въезжаете в готовую квартиру.</p>
-        <div class="hero-cta">
-          <a href="#zayavka" class="btn btn-primary btn-lg">Бесплатный замер и смета</a>
-          <a href="#kak" class="btn btn-ghost btn-lg">Как это устроено</a>
-        </div>
-        <div class="trust">
-          <div><b>4 года</b><span>ремонтируем в Перми</span></div>
-          <div><b>120+</b><span>сданных объектов</span></div>
-          <div><b>24 мес.</b><span>гарантия на работы</span></div>
-          <div><b>Договор</b><span>оплата по этапам</span></div>
-        </div>
-      </div>
+  </div>
+</section>
+
+<!-- HERO: обычная секция сразу после скролл-драйвера — «подтягивается» вплотную
+     к анимации, когда скраб закончен, и дальше скроллится как всё остальное -->
+<section class="hero" aria-labelledby="hero-h1">
+  <div class="wrap hero-copy">
+    <p class="eyebrow">Капитальный ремонт вторички · Пермь</p>
+    <h1 id="hero-h1">Личный <em>руководитель ремонта</em>. Один договор. Одна ответственность.</h1>
+    <p class="lead">Вы общаетесь только с одним человеком. Он подбирает бригаду, контролирует качество, закупает материалы и ведёт сроки. Вы просто въезжаете в готовую квартиру.</p>
+    <div class="hero-cta">
+      <a href="#zayavka" class="btn btn-primary btn-lg">Бесплатный замер и смета</a>
+      <a href="#kak" class="btn btn-ghost btn-lg">Как это устроено</a>
+    </div>
+    <div class="trust">
+      <div><b>4 года</b><span>ремонтируем в Перми</span></div>
+      <div><b>120+</b><span>сданных объектов</span></div>
+      <div><b>24 мес.</b><span>гарантия на работы</span></div>
+      <div><b>Договор</b><span>оплата по этапам</span></div>
     </div>
   </div>
 </section>

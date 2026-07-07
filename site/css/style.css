@@ -3,6 +3,7 @@
   --putty-ink:#7A5240;
   --sand:#E8E0D4; --plaster:#FAF6EF; --line:#DDD3C4; --line-soft:#ECE3D4;
   --muted:#6B6157; --muted-2:#675C50; --white:#FFFFFF;
+  --hd-h:65px; /* sticky header: 64px .hd + 1px border — the stage pins right under it */
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -30,6 +31,7 @@ img,svg{display:block;max-width:100%}
 .logo{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--espresso)}
 .logo svg{flex:none}
 .logo b{font-size:22px;font-weight:700;letter-spacing:-.03em}
+.hd .logo b{font-size:25px}
 
 /* header */
 header{position:sticky;top:0;z-index:50;background:rgba(232,224,212,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
@@ -42,38 +44,41 @@ header{position:sticky;top:0;z-index:50;background:rgba(232,224,212,.88);backdro
 /* scroll-scrubbed hero video: killed Soviet flat -> modern loft */
 .hero-stage{position:relative;height:300vh;padding:0}
 .hero-stage.hero-stage--static{height:100vh}
-.stage-sticky{position:sticky;top:0;height:100vh;overflow:hidden;background:linear-gradient(155deg,#3A332C 0%,#292420 55%,#1c1815 100%)}
+/* Pinned right below the sticky header (top = header height), never under it:
+   with top:0 both header and stage claimed viewport y=0 and the video slid
+   underneath the header during the scrub. Height is the remaining viewport,
+   so the sticky releases exactly when the scrub reaches 100%. */
+.stage-sticky{position:sticky;top:var(--hd-h);height:calc(100vh - var(--hd-h));overflow:hidden;background:linear-gradient(155deg,#3A332C 0%,#292420 55%,#1c1815 100%)}
 .stage-frame{position:absolute;inset:0}
 .stage-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .hero-stage--hidden{display:none}
-/* header is 64px of normal flow above the stage, so at scroll 0 the bottom
-   64px of the 100vh sticky stage sit below the viewport — bottom padding
-   accounts for that (plus the mobile sticky CTA in the 720px query below) */
-.stage-overlay{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:120px 24px calc(112px + env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(28,24,21,.82),rgba(28,24,21,0));pointer-events:none}
+/* Intro line, anchored to the bottom of the frame; js/main.js translates it
+   down at scroll 0 (below the video, mobile only) and back to 0 by scrub end */
+.stage-overlay{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:120px 24px 48px;background:linear-gradient(to top,rgba(28,24,21,.82),rgba(28,24,21,0));pointer-events:none;will-change:transform}
 .so-brand{font-family:'Spline Sans Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:#D6CBBA;text-shadow:0 1px 8px rgba(0,0,0,.5)}
 .so-line{color:var(--plaster);font-size:clamp(20px,3.2vw,30px);font-weight:700;letter-spacing:-.02em;line-height:1.2;max-width:20em;text-shadow:0 1px 14px rgba(0,0,0,.45)}
 .so-hint{font-family:'Spline Sans Mono',monospace;font-size:12px;letter-spacing:.14em;color:#B0A593;text-shadow:0 1px 8px rgba(0,0,0,.5);animation:hint-bob 2.2s ease-in-out infinite}
 @keyframes hint-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
 @media(max-width:1024px){.hero-stage{height:250vh}}
 @media(max-width:720px){
-  /* Keep the sticky stage at a full 100vh, same as desktop, so it stays
-     pinned in place for the whole scroll-scrub and only releases once the
-     transformation is done — shrinking the sticky box itself (an earlier
-     attempt) opened a gap of plain gradient below it with nothing scrubbing
-     in it. Instead, size only the inner .stage-frame to the video's own
-     aspect ratio and centre it — full width, zero crop, zero letterbox —
-     while .stage-sticky's gradient fills the rest of the screen around it,
-     so there's no sand-coloured (or empty-looking) gap anywhere.  */
-  .hero-stage{height:200vh}
-  .stage-frame{inset:auto;top:50%;left:0;right:0;transform:translateY(-50%);aspect-ratio:16/9}
-  .stage-overlay{padding:16px 16px 20px;gap:4px}
+  /* The pinned box is the 16:9 video itself, flush under the header — no
+     crop, no letterbox, no gap above. The tall driver behind it keeps the
+     same dark gradient: that's the canvas the intro line floats on (it
+     starts mid-screen below the video and rides up onto it), and the canvas
+     the hero section slides over as it pulls up flush under the finished
+     video, right before the sticky releases and everything scrolls away
+     together under the header. */
+  .hero-stage{height:200vh;background:linear-gradient(155deg,#3A332C 0%,#292420 55%,#1c1815 100%)}
+  .stage-sticky{height:auto;aspect-ratio:16/9;overflow:visible;background:none}
+  .stage-overlay{padding:14px 16px 16px;gap:4px}
   .so-brand{font-size:10px}
-  .so-line{font-size:15px}
+  .so-line{font-size:16px}
   .so-hint{display:none}
 }
 @media(prefers-reduced-motion:reduce){.hero-stage{height:100vh}.so-hint{display:none}}
 
-/* hero copy — now lives inside .stage-reveal, sliding up over the video */
+/* hero copy — plain light section right after the scroll-driver */
+.hero{padding:56px 0 40px}
 .hero-copy{max-width:52em;margin:0 auto;text-align:center}
 .hero-copy h1{font-size:clamp(32px,5vw,54px);margin:18px 0 22px}
 .hero-copy h1 em{font-style:normal;color:var(--putty-ink);position:relative}
@@ -83,22 +88,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(232,224,212,.88);backdro
 .trust div{display:flex;flex-direction:column}
 .trust b{font-size:26px;font-weight:800;color:var(--espresso);letter-spacing:-.02em}
 .trust span{font-size:13px;color:var(--muted-2)}
-@media(max-width:860px){.hero-cta .btn{flex:1;min-width:200px}}
-
-/* reveal panel: real H1/lead/CTA/trust, dark-theme override for the video backdrop */
-.stage-reveal{position:absolute;left:0;right:0;bottom:0;padding:64px 24px 56px;background:linear-gradient(to top,rgba(28,24,21,.94) 35%,rgba(28,24,21,0));transform:translateY(100%);will-change:transform}
-.stage-reveal .eyebrow{color:var(--putty)}
-.stage-reveal .hero-copy h1{color:var(--plaster)}
-.stage-reveal .hero-copy h1 em{color:var(--putty)}
-.stage-reveal .hero-copy p.lead{color:#C9BDAE}
-.stage-reveal .trust{border-top-color:rgba(255,255,255,.16)}
-.stage-reveal .trust b{color:var(--plaster)}
-.stage-reveal .trust span{color:#B0A593}
-.stage-reveal .btn-primary{background:var(--plaster);color:var(--espresso)}
-.stage-reveal .btn-primary:hover{box-shadow:0 10px 24px -8px rgba(0,0,0,.5)}
-.stage-reveal .btn-ghost{border-color:var(--plaster);color:var(--plaster)}
-.stage-reveal .btn-ghost:hover{background:var(--plaster);color:var(--espresso)}
-@media(prefers-reduced-motion:reduce){.stage-reveal{transform:translateY(0)}}
+@media(max-width:860px){.hero{padding:40px 0 32px}.hero-cta .btn{flex:1;min-width:200px}}
 
 /* dark fear band */
 .band-ink{background:var(--espresso);color:var(--sand)}
