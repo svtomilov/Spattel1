@@ -55,7 +55,16 @@ header{position:sticky;top:0;z-index:50;background:rgba(232,224,212,.88);backdro
 .so-hint{font-family:'Spline Sans Mono',monospace;font-size:12px;letter-spacing:.14em;color:#B0A593;text-shadow:0 1px 8px rgba(0,0,0,.5);animation:hint-bob 2.2s ease-in-out infinite}
 @keyframes hint-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
 @media(max-width:1024px){.hero-stage{height:250vh}}
-@media(max-width:720px){.hero-stage{height:200vh}.stage-overlay{padding-bottom:calc(150px + env(safe-area-inset-bottom))}}
+@media(max-width:720px){
+  .hero-stage{height:200vh}
+  .stage-overlay{padding-bottom:calc(150px + env(safe-area-inset-bottom))}
+  /* Fit by width instead of cropping to fill height — the video is 16:9
+     landscape but the sticky stage is a tall portrait box on phones, so
+     cover() was cropping off the side walls and showing only the centre.
+     contain() shows the full width (whole room, no cropped sides) and
+     letterboxes above/below with the existing gradient background. */
+  .stage-video{object-fit:contain}
+}
 @media(prefers-reduced-motion:reduce){.hero-stage{height:100vh}.stage-fade-out{display:none}.so-hint{display:none}}
 
 /* hero copy (below the 3D stage) */

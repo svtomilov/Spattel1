@@ -72,6 +72,21 @@
     if (video.readyState >= 1) setDuration();
     else video.addEventListener('loadedmetadata', setDuration, { once: true });
 
+    // Seeking a compressed video is decode work, not a free property set —
+    // firing it on every animation frame (~60/s) asks the decoder for more
+    // seeks per second than it can actually service, especially on phones,
+    // which is what reads as "jerky" rather than smooth. Thin the seeks out
+    // to a fixed interval during active scrolling, then snap to the exact
+    // frame once scrolling settles so it's still frame-accurate at rest.
+    var SEEK_INTERVAL_MS = 90;
+    var lastSeekAt = 0;
+    var settleTimer = null;
+
+    function seekTo(progress) {
+      if (!duration) return;
+      video.currentTime = Math.min(progress * duration, Math.max(0, duration - 0.05));
+    }
+
     var ticking = false;
     function onScroll() {
       if (ticking) return;
@@ -80,7 +95,15 @@
         var rect = section.getBoundingClientRect();
         var scrollable = section.offsetHeight - window.innerHeight;
         var progress = scrollable > 0 ? Math.min(1, Math.max(0, -rect.top / scrollable)) : 0;
-        if (duration) video.currentTime = Math.min(progress * duration, Math.max(0, duration - 0.05));
+
+        var now = performance.now();
+        if (now - lastSeekAt >= SEEK_INTERVAL_MS) {
+          seekTo(progress);
+          lastSeekAt = now;
+        }
+        clearTimeout(settleTimer);
+        settleTimer = setTimeout(function () { seekTo(progress); }, SEEK_INTERVAL_MS + 40);
+
         // Intro overlay text dissolves within the first ~12% of scroll.
         if (overlay) overlay.style.opacity = Math.max(0, 1 - progress / 0.12);
         // Blend the last ~18% of scroll into --sand so the section hands off
