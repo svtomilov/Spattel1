@@ -69,12 +69,12 @@
     <div class="stage-frame">
       <video id="stageVideo" class="stage-video" src="assets/hero-transform.mp4" muted playsinline webkit-playsinline preload="auto"></video>
       <!--
-        Интро-строка. На мобильных видео — короткий 16:9-блок сразу под шапкой,
-        а эта строка стартует ПОД ним, в середине свободной части экрана, и по
-        мере прокрутки поднимается, к концу анимации оказываясь поверх нижней
-        части видео (transform двигает js/main.js). На десктопе видео занимает
-        весь экран под шапкой, свободного места снизу нет — строка просто
-        остаётся у нижнего края кадра.
+        Интро-строка. При нулевой прокрутке стоит у нижнего края экрана и с
+        первым же движением скролла начинает подниматься, плавно останавливаясь
+        в середине экрана (transform двигает js/main.js). На мобильных она
+        останавливается на тёмном градиенте под видео, и следующая секция
+        подтягивается вплотную под неё; на десктопе видео занимает весь экран
+        под шапкой — строка поднимается к середине поверх видео.
       -->
       <div class="stage-overlay" id="stageOverlay">
         <p class="so-brand">Spattel · ремонт вторички · Пермь</p>
@@ -90,17 +90,17 @@
 <section class="hero" aria-labelledby="hero-h1">
   <div class="wrap hero-copy">
     <p class="eyebrow">Капитальный ремонт вторички · Пермь</p>
-    <h1 id="hero-h1">Личный <em>руководитель ремонта</em>. Один договор. Одна ответственность.</h1>
-    <p class="lead">Вы общаетесь только с одним человеком. Он подбирает бригаду, контролирует качество, закупает материалы и ведёт сроки. Вы просто въезжаете в готовую квартиру.</p>
+    <h1 id="hero-h1" data-field="hero.headline" data-html>Личный <em>руководитель ремонта</em>. Один договор. Одна ответственность.</h1>
+    <p class="lead" data-field="hero.lead">Вы общаетесь только с одним человеком. Он подбирает бригаду, контролирует качество, закупает материалы и ведёт сроки. Вы просто въезжаете в готовую квартиру.</p>
     <div class="hero-cta">
-      <a href="#zayavka" class="btn btn-primary btn-lg">Бесплатный замер и смета</a>
-      <a href="#kak" class="btn btn-ghost btn-lg">Как это устроено</a>
+      <a href="#zayavka" class="btn btn-primary btn-lg" data-field="hero.ctaPrimary">Бесплатный замер и смета</a>
+      <a href="#kak" class="btn btn-ghost btn-lg" data-field="hero.ctaSecondary">Как это устроено</a>
     </div>
     <div class="trust">
-      <div><b>4 года</b><span>ремонтируем в Перми</span></div>
-      <div><b>120+</b><span>сданных объектов</span></div>
-      <div><b>24 мес.</b><span>гарантия на работы</span></div>
-      <div><b>Договор</b><span>оплата по этапам</span></div>
+      <div><b data-field="trust.0.value">4 года</b><span data-field="trust.0.label">ремонтируем в Перми</span></div>
+      <div><b data-field="trust.1.value">120+</b><span data-field="trust.1.label">сданных объектов</span></div>
+      <div><b data-field="trust.2.value">24 мес.</b><span data-field="trust.2.label">гарантия на работы</span></div>
+      <div><b data-field="trust.3.value">Договор</b><span data-field="trust.3.label">оплата по этапам</span></div>
     </div>
   </div>
 </section>
@@ -113,7 +113,7 @@
       <p class="sub">Мы взяли шесть главных страхов ремонта вторички и превратили каждый в наше обязательство.</p>
       <div class="fear-list">
         <div class="fear-item"><span class="x">бросят недоделанным</span><div class="ok">Оплата по этапам, по факту</div></div>
-        <div class="fear-item"><span class="x">смета поедет</span><div class="ok">Фиксированная цена в договоре</div></div>
+        <div class="fear-item"><span class="x">цена вырастет в процессе</span><div class="ok">Фиксированная цена в договоре</div></div>
         <div class="fear-item"><span class="x">сорвут сроки</span><div class="ok">График с ответственным за каждый этап</div></div>
         <div class="fear-item"><span class="x">скрытый брак</span><div class="ok">Приёмка каждого этапа по чек-листу</div></div>
         <div class="fear-item"><span class="x">разбираться с мастерами</span><div class="ok">Всё общение — через одного человека</div></div>
@@ -169,24 +169,24 @@
     </div>
     <div class="prods reveal">
       <div class="prod">
-        <p class="pk">Косметический</p>
-        <h3>Освежить квартиру</h3>
-        <div class="price">от 7 000 ₽<small> / м²</small></div>
+        <p class="pk" data-field="products.0.tier">Косметический</p>
+        <h3 data-field="products.0.name">Освежить квартиру</h3>
+        <div class="price"><span data-field="products.0.price">от 7 000 ₽</span><small> / м²</small></div>
         <ul><li>Подготовка и окраска стен, обои</li><li>Напольное покрытие</li><li>Замена дверей</li><li>Натяжные потолки</li><li>Закупка материалов</li></ul>
         <a href="#zayavka" class="btn btn-ghost">Рассчитать</a>
       </div>
       <div class="prod feat">
-        <span class="badge-feat">Ваш выбор для вторички</span>
-        <p class="pk">Капитальный</p>
-        <h3>Полный ремонт под заезд</h3>
-        <div class="price">от 15 000 ₽<small> / м²</small></div>
+        <span class="badge-feat" data-field="products.1.badge">Чаще всего выбирают для вторички</span>
+        <p class="pk" data-field="products.1.tier">Капитальный</p>
+        <h3 data-field="products.1.name">Полный ремонт под заезд</h3>
+        <div class="price"><span data-field="products.1.price">от 15 000 ₽</span><small> / м²</small></div>
         <ul><li>Демонтаж и перепланировка</li><li>Новая электрика и сантехника</li><li>Стяжка, выравнивание стен</li><li>Плитка, чистовая отделка</li><li>Приёмка каждого этапа по чек-листу</li></ul>
         <a href="#zayavka" class="btn btn-ghost">Рассчитать</a>
       </div>
       <div class="prod">
-        <p class="pk">Под ключ</p>
-        <h3>С дизайн-проектом и мебелью</h3>
-        <div class="price">от 25 000 ₽<small> / м²</small></div>
+        <p class="pk" data-field="products.2.tier">Под ключ</p>
+        <h3 data-field="products.2.name">С дизайн-проектом и мебелью</h3>
+        <div class="price"><span data-field="products.2.price">от 25 000 ₽</span><small> / м²</small></div>
         <ul><li>Всё из капитального</li><li>Дизайн-проект и подбор материалов</li><li>Мебель, кухня, техника</li><li>Заезжаете в полностью готовую квартиру</li></ul>
         <a href="#zayavka" class="btn btn-ghost">Рассчитать</a>
       </div>
@@ -205,7 +205,7 @@
       <div class="risk-list">
         <div class="r"><div class="ic" aria-hidden="true">✓</div><div><h3>Договор со Spattel, а не с мастером</h3><p>Отвечает компания, а не бригада, которая может исчезнуть.</p></div></div>
         <div class="r"><div class="ic" aria-hidden="true">✓</div><div><h3>Оплата по этапам, по факту</h3><p>Без большого аванса. Платите за то, что уже сделано и принято.</p></div></div>
-        <div class="r"><div class="ic" aria-hidden="true">✓</div><div><h3>Фиксированная смета</h3><p>Доплата — только за письменно согласованные изменения. Никаких сюрпризов.</p></div></div>
+        <div class="r"><div class="ic" aria-hidden="true">✓</div><div><h3>Фиксированная смета</h3><p>Доплата — только за письменно согласованные изменения.</p></div></div>
         <div class="r"><div class="ic" aria-hidden="true">✓</div><div><h3>Удержание 10% до вашей приёмки</h3><p>Подрядчик получает последние 10% только после того, как вы приняли работу.</p></div></div>
       </div>
       <div class="guarantee">
@@ -230,7 +230,7 @@
         <thead><tr><th scope="col">Что важно</th><th scope="col">Бригада с Авито</th><th scope="col">Ремонтная фирма</th><th scope="col" class="us">Spattel</th></tr></thead>
         <tbody>
           <tr><td>Кто отвечает за итог</td><td>Никто</td><td>Менеджер, меняется</td><td class="us">Один руководитель проекта</td></tr>
-          <tr><td>Цена</td><td>Низкая, но «поедет»</td><td>Высокая, непрозрачная</td><td class="us">Фиксированная, прозрачная</td></tr>
+          <tr><td>Цена</td><td>Низкая, но вырастет в процессе</td><td>Высокая, непрозрачная</td><td class="us">Фиксированная, прозрачная</td></tr>
           <tr><td>Риск, что бросят</td><td>Высокий</td><td>Средний</td><td class="us">Оплата по факту, договор</td></tr>
           <tr><td>Материалы</td><td>Возите сами</td><td>Скрытая наценка</td><td class="us">Закупка без переплат</td></tr>
           <tr><td>Гарантия</td><td>Нет</td><td>Формальная</td><td class="us">24 месяца, реальная</td></tr>
@@ -268,12 +268,12 @@
       <p class="eyebrow">Вопросы</p>
       <h2 id="faq-h2">Коротко о главном</h2>
     </div>
-    <div class="faq reveal">
+    <div class="faq reveal" id="faqList">
       <details class="q"><summary>Сколько стоит капитальный ремонт?</summary><p>Капитальный ремонт — от 15 000 ₽/м². Точная цена фиксируется в смете после бесплатного замера и зависит от площади и объёма работ. Итог закрепляется в договоре и дальше не меняется, кроме согласованных с вами изменений.</p></details>
       <details class="q"><summary>Почему это дороже частной бригады с Авито?</summary><p>Бригада дешевле ровно до первого срыва. В цену Spattel входит то, чего у бригады нет: фиксированная смета в договоре, руководитель проекта, приёмка каждого этапа по чек-листу, закупка материалов с чеками и гарантия 24 месяца. Вы платите за предсказуемый результат, а не только за работу мастеров.</p></details>
       <details class="q"><summary>А вдруг в процессе всё подорожает?</summary><p>Нет. Цена в договоре фиксированная. Доплата возможна только за работы, которые вы сами дополнительно попросили и письменно согласовали.</p></details>
       <details class="q"><summary>Нужно ли платить большой аванс?</summary><p>Нет. Вы платите по этапам, по факту принятых работ. Аванс берём только целевой — на закупку материалов под конкретный этап, и подтверждаем чеками.</p></details>
-      <details class="q"><summary>Что если найдётся брак?</summary><p>Каждый этап принимается по чек-листу — брак ловится сразу, а не через год. На работы действует гарантия 24 месяца, прописанная в договоре.</p></details>
+      <details class="q"><summary>Что если найдётся брак?</summary><p>Каждый этап принимается по чек-листу — брак виден сразу, а не через год. На работы действует гарантия 24 месяца, прописанная в договоре.</p></details>
       <details class="q"><summary>Подходит ли это для хрущёвки или брежневки?</summary><p>Да, большинство наших объектов — именно вторичное жильё 60–90-х годов постройки: хрущёвки, брежневки, панельные дома. Мы учитываем их особенности — старую проводку, перепланировки, состояние стояков — ещё на этапе замера и сметы.</p></details>
       <details class="q"><summary>Сколько занимает капитальный ремонт?</summary><p>Обычно 1,5–3 месяца в зависимости от площади и объёма. Точный график вы получаете вместе со сметой.</p></details>
     </div>
@@ -334,7 +334,7 @@
 </footer>
 
 <div class="m-cta" id="mCta">
-  <a href="#zayavka" class="btn btn-primary">Бесплатный замер и смета</a>
+  <a href="#zayavka" class="btn btn-primary" data-field="hero.ctaPrimary">Бесплатный замер и смета</a>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>

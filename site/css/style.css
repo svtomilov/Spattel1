@@ -52,25 +52,28 @@ header{position:sticky;top:0;z-index:50;background:rgba(232,224,212,.88);backdro
 .stage-frame{position:absolute;inset:0}
 .stage-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .hero-stage--hidden{display:none}
-/* Intro line, anchored to the bottom of the frame; js/main.js translates it
-   down at scroll 0 (below the video, mobile only) and back to 0 by scrub end */
-.stage-overlay{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:120px 24px 48px;background:linear-gradient(to top,rgba(28,24,21,.82),rgba(28,24,21,0));pointer-events:none;will-change:transform}
-.so-brand{font-family:'Spline Sans Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:#D6CBBA;text-shadow:0 1px 8px rgba(0,0,0,.5)}
-.so-line{color:var(--plaster);font-size:clamp(20px,3.2vw,30px);font-weight:700;letter-spacing:-.02em;line-height:1.2;max-width:20em;text-shadow:0 1px 14px rgba(0,0,0,.45)}
-.so-hint{font-family:'Spline Sans Mono',monospace;font-size:12px;letter-spacing:.14em;color:#B0A593;text-shadow:0 1px 8px rgba(0,0,0,.5);animation:hint-bob 2.2s ease-in-out infinite}
+/* Intro line, anchored to the bottom edge of the sticky frame; js/main.js
+   translates it: bottom of the viewport at scroll 0, rising to mid-screen as
+   the scrub plays. No scrim behind it — the text sits directly on the shared
+   stage gradient (mobile) / the video (desktop); text-shadow keeps it legible */
+.stage-overlay{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:20px 24px;pointer-events:none;will-change:transform}
+.so-brand{font-family:'Spline Sans Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:#D6CBBA;text-shadow:0 1px 3px rgba(0,0,0,.7),0 1px 12px rgba(0,0,0,.5)}
+.so-line{color:var(--plaster);font-size:clamp(20px,3.2vw,30px);font-weight:700;letter-spacing:-.02em;line-height:1.2;max-width:20em;text-shadow:0 1px 4px rgba(0,0,0,.55),0 2px 18px rgba(0,0,0,.45)}
+.so-hint{font-family:'Spline Sans Mono',monospace;font-size:12px;letter-spacing:.14em;color:#B0A593;text-shadow:0 1px 8px rgba(0,0,0,.6);animation:hint-bob 2.2s ease-in-out infinite}
 @keyframes hint-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
 @media(max-width:1024px){.hero-stage{height:250vh}}
 @media(max-width:720px){
-  /* The pinned box is the 16:9 video itself, flush under the header — no
-     crop, no letterbox, no gap above. The tall driver behind it keeps the
-     same dark gradient: that's the canvas the intro line floats on (it
-     starts mid-screen below the video and rides up onto it), and the canvas
-     the hero section slides over as it pulls up flush under the finished
-     video, right before the sticky releases and everything scrolls away
+  /* The pinned box is the 16:9 video flush under the header plus a strip of
+     the shared dark gradient below it, ending just under mid-screen — that's
+     where the intro line comes to rest (it starts at the bottom edge of the
+     viewport and rises there as the scrub plays; js/main.js sizes the sticky
+     and drives the transform). The hero section then pulls up close beneath
+     the settled line before the sticky releases and everything scrolls away
      together under the header. */
   .hero-stage{height:200vh;background:linear-gradient(155deg,#3A332C 0%,#292420 55%,#1c1815 100%)}
-  .stage-sticky{height:auto;aspect-ratio:16/9;overflow:visible;background:none}
-  .stage-overlay{padding:14px 16px 16px;gap:4px}
+  .stage-sticky{height:calc(50vh + 48px - var(--hd-h));overflow:visible;background:none}
+  .stage-video{position:static;inset:auto;width:100%;height:auto;aspect-ratio:16/9}
+  .stage-overlay{padding:12px 16px 14px;gap:4px}
   .so-brand{font-size:10px}
   .so-line{font-size:16px}
   .so-hint{display:none}
@@ -78,7 +81,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(232,224,212,.88);backdro
 @media(prefers-reduced-motion:reduce){.hero-stage{height:100vh}.so-hint{display:none}}
 
 /* hero copy — plain light section right after the scroll-driver */
-.hero{padding:56px 0 40px}
+.hero{padding:40px 0 40px}
 .hero-copy{max-width:52em;margin:0 auto;text-align:center}
 .hero-copy h1{font-size:clamp(32px,5vw,54px);margin:18px 0 22px}
 .hero-copy h1 em{font-style:normal;color:var(--putty-ink);position:relative}
@@ -88,7 +91,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(232,224,212,.88);backdro
 .trust div{display:flex;flex-direction:column}
 .trust b{font-size:26px;font-weight:800;color:var(--espresso);letter-spacing:-.02em}
 .trust span{font-size:13px;color:var(--muted-2)}
-@media(max-width:860px){.hero{padding:40px 0 32px}.hero-cta .btn{flex:1;min-width:200px}}
+@media(max-width:860px){.hero{padding:24px 0 32px}.hero-cta .btn{flex:1;min-width:200px}}
 
 /* dark fear band */
 .band-ink{background:var(--espresso);color:var(--sand)}

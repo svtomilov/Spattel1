@@ -1,6 +1,45 @@
 (function () {
   var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  function initContent() {
+    // Editable copy lives in content.json (managed via /admin.html, which
+    // commits to GitHub and re-deploys). The strings hardcoded in index.html
+    // are the fallback: if the fetch fails (file://, JSON missing or broken),
+    // the page simply keeps them.
+    if (!window.fetch) return;
+    fetch('content.json', { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (data) {
+        document.querySelectorAll('[data-field]').forEach(function (el) {
+          var val = el.getAttribute('data-field').split('.').reduce(function (o, k) {
+            return o == null ? o : o[k];
+          }, data);
+          if (typeof val !== 'string' || !val) return;
+          // data-html is only for fields that legitimately carry markup
+          // (the hero headline's <em>); everything else is plain text.
+          if (el.hasAttribute('data-html')) el.innerHTML = val;
+          else el.textContent = val;
+        });
+        var list = document.getElementById('faqList');
+        if (list && Array.isArray(data.faq) && data.faq.length) {
+          list.innerHTML = '';
+          data.faq.forEach(function (item) {
+            if (!item || !item.q || !item.a) return;
+            var d = document.createElement('details');
+            d.className = 'q';
+            var s = document.createElement('summary');
+            s.textContent = item.q;
+            var p = document.createElement('p');
+            p.textContent = item.a;
+            d.appendChild(s);
+            d.appendChild(p);
+            list.appendChild(d);
+          });
+        }
+      })
+      .catch(function () { /* keep the HTML defaults */ });
+  }
+
   function initReveal() {
     var targets = document.querySelectorAll('.reveal');
     if (prefersReduced || !window.gsap || !window.ScrollTrigger) {
@@ -63,19 +102,43 @@
       return;
     }
 
-    // The intro line ("Из убитой вторички…") docks onto the lower part of the
-    // video at scrub end (translateY 0 — its CSS anchor). At scroll 0 it is
-    // pushed DOWN by overlayRise px, i.e. below the pinned video, centred in
-    // the free strip of screen under it. On desktop the video fills the whole
-    // viewport under the header, the free strip is 0, and the line just stays
-    // put at the bottom of the frame.
-    var overlayRise = 0;
+    // The intro line ("Из убитой вторички…") starts at the BOTTOM EDGE of the
+    // viewport at scroll 0 and rises to the vertical MIDDLE of the screen as
+    // the scrub plays (eased, so the motion is perceptible from the very
+    // first pixel of scroll). On mobile the sticky box is stretched below the
+    // 16:9 video so its bottom edge lands right under the line's resting
+    // spot — the hero section then pulls up close beneath the settled line.
+    // On desktop the video fills the viewport under the header and the line
+    // rises over it to the same mid-screen resting spot.
+    var shiftStart = 0, shiftEnd = 0;
     function measureRise() {
       if (!overlay || !sticky) return;
       var head = document.querySelector('header');
       var headH = head ? head.offsetHeight : 0;
-      var free = window.innerHeight - headH - sticky.offsetHeight;
-      overlayRise = free > 40 ? free / 2 + overlay.offsetHeight / 2 : 0;
+      var H = window.innerHeight;
+      var overlayH = overlay.offsetHeight;
+      if (window.matchMedia('(max-width:720px)').matches) {
+        // Size the sticky so its bottom edge = the settled line's bottom
+        // (mid-screen centre + half the line's height). The video keeps its
+        // own aspect-ratio height at the top; the extra space below is the
+        // same dark gradient the tall driver already paints.
+        var videoH = video.offsetHeight;
+        var stickyH = Math.max(videoH, Math.round(H / 2 + overlayH / 2 - headH));
+        sticky.style.height = stickyH + 'px';
+      } else {
+        sticky.style.height = '';
+      }
+      var stickyBottom = headH + sticky.offsetHeight;
+      // Resting spot: line vertically centred in the viewport (translate
+      // relative to its CSS anchor at the sticky's bottom edge).
+      shiftEnd = (H / 2 + overlayH / 2) - stickyBottom;
+      // Start spot: line's bottom at the viewport's bottom edge — just above
+      // the fixed mobile CTA bar when that is visible (offsetParent is always
+      // null for fixed elements, so check computed display instead).
+      var mcta = document.getElementById('mCta');
+      var inset = 16;
+      if (mcta && getComputedStyle(mcta).display !== 'none') inset = mcta.offsetHeight;
+      shiftStart = (H - inset) - stickyBottom;
     }
 
     var duration = 0;
@@ -120,8 +183,11 @@
         clearTimeout(settleTimer);
         settleTimer = setTimeout(function () { seekTo(progress); }, SEEK_INTERVAL_MS + 40);
 
-        // Intro line rides up from below the video to its bottom edge.
-        if (overlay) overlay.style.transform = 'translateY(' + overlayRise * (1 - progress) + 'px)';
+        // Intro line rises from the bottom edge toward mid-screen. Cubic
+        // ease-out: it moves the moment scrolling begins and settles softly
+        // (≈97% of the way by progress 0.7) while the scrub finishes.
+        var eased = 1 - Math.pow(1 - progress, 3);
+        if (overlay) overlay.style.transform = 'translateY(' + (shiftStart + (shiftEnd - shiftStart) * eased) + 'px)';
         // The "листайте" hint has done its job once scrolling starts.
         if (hint) hint.style.opacity = Math.max(0, 1 - progress / 0.35);
         ticking = false;
@@ -175,6 +241,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
+    initContent();
     initReveal();
     initHeroStage();
     initStickyCta();
