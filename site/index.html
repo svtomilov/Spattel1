@@ -66,31 +66,35 @@
 -->
 <section class="hero-stage" id="hero3d" aria-label="Видео: старая квартира преображается в современный лофт по мере прокрутки">
   <div class="stage-sticky">
-    <video id="stageVideo" class="stage-video" src="assets/hero-transform.mp4" muted playsinline webkit-playsinline preload="auto"></video>
-    <div class="stage-overlay" id="stageOverlay">
-      <p class="so-brand">Spattel · ремонт вторички · Пермь</p>
-      <p class="so-line">Из убитой вторички — в квартиру под заезд</p>
-      <p class="so-hint" aria-hidden="true">листайте ↓</p>
+    <div class="stage-frame">
+      <video id="stageVideo" class="stage-video" src="assets/hero-transform.mp4" muted playsinline webkit-playsinline preload="auto"></video>
+      <div class="stage-overlay" id="stageOverlay">
+        <p class="so-brand">Spattel · ремонт вторички · Пермь</p>
+        <p class="so-line">Из убитой вторички — в квартиру под заезд</p>
+        <p class="so-hint" aria-hidden="true">листайте ↓</p>
+      </div>
     </div>
-    <div class="stage-fade-out" aria-hidden="true"></div>
-  </div>
-</section>
-
-<!-- HERO -->
-<section class="hero" aria-labelledby="hero-h1">
-  <div class="wrap hero-copy">
-    <p class="eyebrow">Капитальный ремонт вторички · Пермь</p>
-    <h1 id="hero-h1">Личный <em>руководитель ремонта</em>. Один договор. Одна ответственность.</h1>
-    <p class="lead">Вы общаетесь только с одним человеком. Он подбирает бригаду, контролирует качество, закупает материалы и ведёт сроки. Вы просто въезжаете в готовую квартиру.</p>
-    <div class="hero-cta">
-      <a href="#zayavka" class="btn btn-primary btn-lg">Бесплатный замер и смета</a>
-      <a href="#kak" class="btn btn-ghost btn-lg">Как это устроено</a>
-    </div>
-    <div class="trust">
-      <div><b>4 года</b><span>ремонтируем в Перми</span></div>
-      <div><b>120+</b><span>сданных объектов</span></div>
-      <div><b>24 мес.</b><span>гарантия на работы</span></div>
-      <div><b>Договор</b><span>оплата по этапам</span></div>
+    <!--
+      Slides up from below as the scrub nears its end (last ~50% of progress)
+      and lands flush with the bottom of the frame exactly when it finishes —
+      js/main.js drives the transform, see stageReveal in initHeroStage().
+    -->
+    <div class="stage-reveal" id="stageReveal" aria-labelledby="hero-h1">
+      <div class="wrap hero-copy">
+        <p class="eyebrow">Капитальный ремонт вторички · Пермь</p>
+        <h1 id="hero-h1">Личный <em>руководитель ремонта</em>. Один договор. Одна ответственность.</h1>
+        <p class="lead">Вы общаетесь только с одним человеком. Он подбирает бригаду, контролирует качество, закупает материалы и ведёт сроки. Вы просто въезжаете в готовую квартиру.</p>
+        <div class="hero-cta">
+          <a href="#zayavka" class="btn btn-primary btn-lg">Бесплатный замер и смета</a>
+          <a href="#kak" class="btn btn-ghost btn-lg">Как это устроено</a>
+        </div>
+        <div class="trust">
+          <div><b>4 года</b><span>ремонтируем в Перми</span></div>
+          <div><b>120+</b><span>сданных объектов</span></div>
+          <div><b>24 мес.</b><span>гарантия на работы</span></div>
+          <div><b>Договор</b><span>оплата по этапам</span></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>

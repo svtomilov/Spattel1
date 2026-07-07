@@ -25,8 +25,8 @@
     // transformation plays forward/backward as the user scrolls up/down.
     var section = document.getElementById('hero3d');
     var video = document.getElementById('stageVideo');
-    var fadeOut = section && section.querySelector('.stage-fade-out');
     var overlay = section && section.querySelector('.stage-overlay');
+    var reveal = section && section.querySelector('.stage-reveal');
     if (!section || !video) return;
 
     // If the video can't load at all, collapse the stage instead of leaving
@@ -106,9 +106,12 @@
 
         // Intro overlay text dissolves within the first ~12% of scroll.
         if (overlay) overlay.style.opacity = Math.max(0, 1 - progress / 0.12);
-        // Blend the last ~18% of scroll into --sand so the section hands off
-        // seamlessly into the hero copy below instead of cutting abruptly.
-        if (fadeOut) fadeOut.style.opacity = Math.max(0, (progress - 0.82) / 0.18);
+        // The real heading rises from below over the last 50% of the scrub
+        // and lands flush with the bottom of the frame exactly as it ends.
+        if (reveal) {
+          var revealT = Math.max(0, Math.min(1, (progress - 0.5) / 0.5));
+          reveal.style.transform = 'translateY(' + (100 - 100 * revealT) + '%)';
+        }
         ticking = false;
       });
     }
