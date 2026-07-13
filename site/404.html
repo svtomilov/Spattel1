@@ -5,33 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Страница не найдена · Spattel</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#E8E0D4">
-<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath fill='none' stroke='%2316A34A' stroke-width='15' stroke-linecap='butt' d='M86,42 C86,27 58,24 46,34 C33,45 47,55 60,60 C75,66 88,77 74,90 C61,101 40,98 34,84'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;800&family=Spline+Sans+Mono:wght@500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
+  :root{--ink:#0E1116;--paper:#FFFFFF;--line:#E6E8EB;--z-proj:#16A34A;--muted:#5B6472}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Manrope',system-ui,sans-serif}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  header{border-bottom:1px solid var(--line)}
+  .hd{display:flex;align-items:center;height:72px}
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:800}
   .nf{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px}
-  .nf .code{font-family:'Spline Sans Mono',monospace;color:var(--putty);letter-spacing:.16em;font-size:13px;margin-bottom:18px}
-  .nf h1{font-size:clamp(28px,5vw,44px);margin-bottom:14px}
-  .nf p{color:var(--muted);max-width:32em;margin-bottom:26px}
+  .nf .code{font-weight:700;letter-spacing:.16em;font-size:13px;color:var(--z-proj);margin-bottom:18px}
+  .nf h1{font-size:clamp(28px,5vw,44px);margin:0 0 14px}
+  .nf p{color:var(--muted);max-width:32em;margin:0 0 26px}
+  .btn{display:inline-flex;align-items:center;padding:14px 28px;border-radius:999px;background:var(--z-proj);color:#fff;text-decoration:none;font-weight:700}
 </style>
 </head>
 <body>
   <header>
     <div class="wrap hd">
       <a class="logo" href="/" aria-label="Spattel — на главную">
-        <svg width="34" height="34" viewBox="0 0 100 100" aria-hidden="true"><path d="M11,46 C30,72 70,72 89,46 C71,60 29,60 11,46 Z" fill="#B0876A"/></svg>
-        <b>Spattel</b>
+        <svg width="28" height="28" viewBox="0 0 120 120" aria-hidden="true"><path fill="none" stroke="#16A34A" stroke-width="15" stroke-linecap="butt" d="M86,42 C86,27 58,24 46,34 C33,45 47,55 60,60 C75,66 88,77 74,90 C61,101 40,98 34,84"/></svg>
+        Spattel
       </a>
     </div>
   </header>
   <main class="nf">
     <p class="code">ОШИБКА 404</p>
     <h1>Такой страницы нет</h1>
-    <p>Возможно, ссылка устарела или содержит опечатку. Вернитесь на главную — там всё, что нужно для заявки на замер.</p>
-    <a href="/" class="btn btn-primary btn-lg">На главную</a>
+    <p>Возможно, ссылка устарела или содержит опечатку. Вернитесь на главную — там всё, что нужно для расчёта сметы.</p>
+    <a href="/" class="btn">На главную</a>
   </main>
 </body>
 </html>
