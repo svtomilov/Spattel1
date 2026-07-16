@@ -1,43 +1,28 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Страница не найдена · Spattel</title>
-<meta name="robots" content="noindex">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath fill='none' stroke='%2316A34A' stroke-width='15' stroke-linecap='butt' d='M86,42 C86,27 58,24 46,34 C33,45 47,55 60,60 C75,66 88,77 74,90 C61,101 40,98 34,84'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<html lang="ru"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Страница не найдена — Spattel</title>
 <style>
-  :root{--ink:#0E1116;--paper:#FFFFFF;--line:#E6E8EB;--z-proj:#16A34A;--muted:#5B6472}
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Manrope',system-ui,sans-serif}
-  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
-  header{border-bottom:1px solid var(--line)}
-  .hd{display:flex;align-items:center;height:72px}
-  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:800}
-  .nf{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px}
-  .nf .code{font-weight:700;letter-spacing:.16em;font-size:13px;color:var(--z-proj);margin-bottom:18px}
-  .nf h1{font-size:clamp(28px,5vw,44px);margin:0 0 14px}
-  .nf p{color:var(--muted);max-width:32em;margin:0 0 26px}
-  .btn{display:inline-flex;align-items:center;padding:14px 28px;border-radius:999px;background:var(--z-proj);color:#fff;text-decoration:none;font-weight:700}
-</style>
-</head>
+:root{--ink:#14181F;--mut:#5B6472;--line:#E4E8EA;--g50:#E9FBEF;--g600:#16A34A;--g700:#15803D;--bg:#F6F8F7;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Manrope','Segoe UI',-apple-system,'DejaVu Sans',sans-serif;color:var(--ink);background:var(--bg);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;}
+.logo img{height:30px;margin-bottom:28px;}
+.big{font-size:84px;font-weight:800;letter-spacing:-.03em;color:var(--g600);line-height:1;}
+h1{font-size:24px;font-weight:800;margin:14px 0 8px;}
+p{color:var(--mut);max-width:440px;margin:0 auto 24px;line-height:1.6;}
+.btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+a.btn{display:inline-block;text-decoration:none;font-weight:700;font-size:15px;border-radius:11px;padding:13px 22px;}
+a.primary{background:var(--g700);color:#fff;}
+a.sec{background:#fff;color:var(--g700);border:1.5px solid var(--g600);}
+a.primary:hover{background:var(--g600);}
+</style></head>
 <body>
-  <header>
-    <div class="wrap hd">
-      <a class="logo" href="/" aria-label="Spattel — на главную">
-        <svg width="28" height="28" viewBox="0 0 120 120" aria-hidden="true"><path fill="none" stroke="#16A34A" stroke-width="15" stroke-linecap="butt" d="M86,42 C86,27 58,24 46,34 C33,45 47,55 60,60 C75,66 88,77 74,90 C61,101 40,98 34,84"/></svg>
-        Spattel
-      </a>
-    </div>
-  </header>
-  <main class="nf">
-    <p class="code">ОШИБКА 404</p>
-    <h1>Такой страницы нет</h1>
-    <p>Возможно, ссылка устарела или содержит опечатку. Вернитесь на главную — там всё, что нужно для расчёта сметы.</p>
-    <a href="/" class="btn">На главную</a>
-  </main>
-</body>
-</html>
+  <span class="logo"><img src="/spattel-logo.svg" alt="Spattel"></span>
+  <div class="big">404</div>
+  <h1>Такой страницы нет</h1>
+  <p>Возможно, ссылка устарела или страница переехала. Вернитесь на главную — оттуда можно рассчитать ремонт и оставить заявку.</p>
+  <div class="btns">
+    <a class="btn primary" href="/">На главную</a>
+    <a class="btn sec" href="/#calc">Рассчитать ремонт</a>
+  </div>
+</body></html>
