@@ -2,10 +2,11 @@
 <html lang="ru"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Страница не найдена — Spattel</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#14181F;--mut:#5B6472;--line:#E4E8EA;--g50:#E9FBEF;--g600:#16A34A;--g700:#15803D;--bg:#F6F8F7;}
+:root{--ink:#241D18;--mut:#6B6157;--line:#E5DED4;--g50:#EFDFD1;--g600:#6E4A2E;--g700:#241D18;--bg:#F5F0E9;}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Manrope','Segoe UI',-apple-system,'DejaVu Sans',sans-serif;color:var(--ink);background:var(--bg);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;}
+body{font-family:'Hanken Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;}
 .logo img{height:30px;margin-bottom:28px;}
 .big{font-size:84px;font-weight:800;letter-spacing:-.03em;color:var(--g600);line-height:1;}
 h1{font-size:24px;font-weight:800;margin:14px 0 8px;}
@@ -15,6 +16,126 @@ a.btn{display:inline-block;text-decoration:none;font-weight:700;font-size:15px;b
 a.primary{background:var(--g700);color:#fff;}
 a.sec{background:#fff;color:var(--g700);border:1.5px solid var(--g600);}
 a.primary:hover{background:var(--g600);}
+
+/* ============================================================
+   ДИЗАЙН-СИСТЕМА SPATTEL · палитра base
+   Песок + эспрессо + глина. Шрифты Hanken Grotesk / Spline Sans Mono.
+   Главная кнопка — эспрессо (13:1): в base-палитре глина слишком
+   светлая для белого текста, поэтому CTA несёт чернильная заливка.
+   ============================================================ */
+:root{
+  --espresso:#241D18; --espresso-80:#3F352C; --stone:#6B6157; --stone-40:#7E7264;
+  --putty:#B0876A; --putty-dark:#6E4A2E; --putty-tint:#EFDFD1;
+  --sand:#F5F0E9; --sand-dark:#D6CBBA; --plaster:#FBF8F3;
+  --line-soft:#EFE8DE; --line-faint:#F5F0E9;
+  --ok:#5E7A5A; --ok-tint:#E4EBE1; --warn:#8A6110; --warn-tint:#F5E9D2;
+  --alert:#A8443A; --alert-tint:#F3DFDB;
+  --font-mono:'Spline Sans Mono','SF Mono',ui-monospace,monospace;
+  --ease:cubic-bezier(.2,0,.2,1);
+}
+
+/* страница — песок, карточки и герой — белые/гипсовые */
+body{background:var(--sand);}
+.hero{background:
+  radial-gradient(1100px 460px at 82% -12%, #EFDFD1, transparent 62%),
+  var(--paper) !important;}
+
+/* надзаголовки — моно, как в системе */
+.eyebrow{font-family:var(--font-mono);font-weight:400;font-size:12px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--putty-dark);}
+.on-dark .eyebrow,.ai .eyebrow,.final .eyebrow{color:var(--putty);}
+
+/* заголовки — плотный трекинг системы */
+h1,h2,h3,h4,.h1,.h2,.h3{font-weight:700;letter-spacing:-.025em;}
+h1,.h1{letter-spacing:-.035em;}
+
+/* логотип — мазок шпателя глиной */
+.logo{color:var(--putty);}
+.logo .word,.logo b{font-weight:700;letter-spacing:-.03em;}
+
+/* кнопки */
+.btn{font-weight:600;letter-spacing:-.005em;border-radius:var(--r-sm);}
+.btn-primary{background:var(--espresso);border-color:var(--espresso);color:var(--plaster);}
+.btn-primary:hover{background:var(--espresso-80);border-color:var(--espresso-80);}
+.btn-white{background:var(--plaster);color:var(--espresso);border-color:var(--plaster);}
+.btn-white:hover{background:#fff;}
+.btn:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(176,135,106,.32);}
+
+/* мета-подписи моно */
+.meta,.badge-meta,.stat-l{font-family:var(--font-mono);letter-spacing:.12em;text-transform:uppercase;}
+
+/* тёмные поверхности — тёплые, не синие */
+.ai,.app-mock{background:#241D18;}
+.ai-card,.ai-chat{background:#322A23;}
+.ai-msg.you{background:#3E352D;}
+.ai-msg.bot{background:rgba(176,135,106,.20);}
+
+/* финальная полоса — чернила, без зелёного градиента */
+.final{background:#241D18 !important;}
+
+/* поля форм */
+input,select,textarea{font-family:inherit;}
+input:focus,select:focus,textarea:focus{border-color:var(--putty)!important;
+  box-shadow:0 0 0 3px rgba(176,135,106,.32)!important;}
+
+/* --- доводка контраста под AA (проверено на отрисованной странице) --- */
+.eyebrow{color:#6E4A2E;}                 /* 6.2:1 на белом, 4.7:1 на песке */
+.on-dark .eyebrow,.ai .eyebrow,.final .eyebrow,.cl-sec .eyebrow{color:#B0876A;}
+.app-mock .badge{background:rgba(176,135,106,.18);color:#B0876A;}
+.app-mock .adr,.app-mock .mut,.app-mock .dim,.app .adr,.app .mut,.app .dim{color:#948A80;}
+.ai-badge{color:#B0876A;}
+.ai-msg .who,.ai-chat .who{color:#B5A899;}
+.ai-note{color:#A89C8E;}
+.stars{color:#8A6110;}                   /* латунь — 5.6:1 на белом */
+
+/* --- доводка №2: специфичность --- */
+.app-mock .head .adr,.app-mock .head .mut{color:#948A80;}
+.rev .stars{color:#8A6110;}
+.foot-desc{color:#A89C8E;}
+.foot-bot{color:#9A8D80;}
+
+/* ═══ ДИЗАЙН-СИСТЕМА SPATTEL v1 (утверждённая) ═══
+   Пропорция 76 % белый / 16 % чернила / 8 % putty.
+   Градиентов нет. Тень — только у поднятых карточек.        */
+:root{
+  --putty-bright:#B0876A;  /* только логотип и на чернилах */
+  --putty:#8A5F3E;         /* заливка кнопок и CTA, белый текст 5.5:1 */
+  --putty-dark:#6E4A2E;    /* текст и ссылки на белом, 7.8:1 */
+  --putty-tint:#EFDFD1; --putty-tint-strong:#DFC6AE;
+  --wheat:#D9B26B; --wheat-dark:#6B4A00; --wheat-tint:#F6E7C8;
+  --espresso:#241D18; --plaster:#FBF8F3; --sand:#F5F0E9;
+}
+
+/* страница белая — это 76 % системы */
+body{background:#FFFFFF;}
+.hero{background:#FFFFFF !important;}
+
+/* ритм системы: между секциями 128, поля 64, внутри карточки 32 */
+section{padding-top:128px;padding-bottom:128px;}
+.hero{padding-top:96px;padding-bottom:104px;}
+.wrap{padding-left:64px;padding-right:64px;}
+
+/* главная кнопка — putty-заливка (образец компонентов системы), ховер затемняет */
+.btn-primary{background:var(--putty);border-color:var(--putty);color:#fff;}
+.btn-primary:hover{background:var(--putty-dark);border-color:var(--putty-dark);}
+.btn-primary:active{transform:translateY(1px);}
+.btn-white:active,.btn-ghost:active{transform:translateY(1px);}
+
+/* полоса гарантий — пшеничный тинт с чернильным текстом (правило системы) */
+#guarantee{background:var(--wheat-tint);}
+#guarantee .eyebrow{color:var(--wheat-dark);}
+
+/* надзаголовки и мета — плотный интерлиньяж, моно */
+.eyebrow{line-height:1.2;}
+.meta,.stat-l,.badge-meta{font-size:11px;line-height:1.4;letter-spacing:.12em;}
+
+/* тень только у поднятых карточек — остальное разделяет граница */
+.card,.step,.g-card,.rev,.case{box-shadow:none;border:1px solid var(--line);}
+
+@media(max-width:860px){
+  section{padding-top:72px;padding-bottom:72px;}
+  .wrap{padding-left:20px;padding-right:20px;}
+}
 </style></head>
 <body>
   <span class="logo"><img src="/spattel-logo.svg" alt="Spattel"></span>
